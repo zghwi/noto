@@ -25,6 +25,8 @@ ai/*.pdf
 ai/*.txt
 ai/*.docx
 
+notes.md
+
 *.log
 .env
 *.env.local

@@ -162,6 +162,23 @@ app.MapGet("/profile", async (HttpContext http, AppDbContext db) =>
     });
 }).RequireAuthorization();
 
+app.MapGet("/files", async (HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var files = await db.Files
+            .Where(f => f.UserId == user.Id)
+            .ToListAsync();
+
+    return Results.Ok(files);
+});
+
 app.Run();
 
 record SignupDto(string Name, string Username, string Password);
