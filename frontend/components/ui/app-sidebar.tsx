@@ -1,11 +1,10 @@
-import { DoorOpen, File, Home, Plus, Settings } from "lucide-react";
+import { Folder, Home, Settings } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -22,7 +21,7 @@ const items = [
   {
     title: "Files",
     url: "/~/files",
-    icon: File,
+    icon: Folder,
   },
   {
     title: "Settings",

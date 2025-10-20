@@ -3,7 +3,7 @@ async function authRequest(url: string) {
     const token = localStorage.getItem("token");
     if (!token) return;
     const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error("Failed to fetch data");
     const data = await res.json();
@@ -23,7 +23,7 @@ export async function getFiles() {
 }
 
 export async function getFilesDetails() {
-  const data = await authRequest("http://localhost:5138/files");
+  const data = await getFiles();
   // @ts-ignore
   return data.map(({ data, ...rest }) => rest);
 }
