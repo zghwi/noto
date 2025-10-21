@@ -1,0 +1,1 @@
+![image](/frontend/public/logo_png.png)
