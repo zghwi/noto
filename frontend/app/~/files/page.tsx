@@ -29,7 +29,15 @@ export default function Files() {
 
   const dateToString = (d: string) => {
     const date = new Date(d);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    const fmt = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    }).format(date);
+
+    return fmt;
   };
 
   return (
@@ -42,26 +50,78 @@ export default function Files() {
       {loading ? (
         <Spinner className="flex justify-center items-center h-full" />
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[5%]"></TableHead>
-              <TableHead className="w-[60%]">Name</TableHead>
-              <TableHead className="w-[35%]">Created at</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <div>
+          <div className="hidden md:block w-full overflow-x-auto">
+            <Table className="min-w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead>Content Type</TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead>Created At</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {files.map((file: any) => (
+                  <TableRow key={file.id} className="cursor-pointer">
+                    <TableCell>
+                      <File size={20} />
+                    </TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>{file.name}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>{file.contentType}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>{dateToString(file.createdAt)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="md:hidden space-y-4">
             {files.map((file: any) => (
-              <TableRow key={file.id} className="cursor-pointer">
-                <TableCell>
+              <div key={file.id} className="p-4 border rounded-lg">
+                <div className="flex items-center gap-2">
                   <File size={20} />
-                </TableCell>
-                <TableCell>{file.name}</TableCell>
-                <TableCell>{dateToString(file.createdAt)}</TableCell>
-              </TableRow>
+                  <p className="font-semibold">{file.name}</p>
+                </div>
+                <p className="text-sm text-gray-500">{file.contentType}</p>
+                <p className="text-xs text-gray-400">{dateToString(file.createdAt)}</p>
+              </div>
             ))}
-          </TableBody>
-        </Table>
+          </div>
+        </div>
       )}
     </div>
   );
