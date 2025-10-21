@@ -10,9 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { File } from "lucide-react";
+import { File, FileQuestion } from "lucide-react";
 import { getFilesDetails } from "@/utils/api";
 import { useEffect, useState } from "react";
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 
 export default function Files() {
   const [files, setFiles] = useState<any>([]);
@@ -50,78 +51,92 @@ export default function Files() {
       {loading ? (
         <Spinner className="flex justify-center items-center h-full" />
       ) : (
-        <div>
-          <div className="hidden md:block w-full overflow-x-auto">
-            <Table className="min-w-full">
-              <TableHeader>
-                <TableRow>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Content Type</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Created At</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {files.map((file: any) => (
-                  <TableRow key={file.id} className="cursor-pointer">
-                    <TableCell>
-                      <File size={20} />
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{file.name}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{file.contentType}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{dateToString(file.createdAt)}</TableCell>
+        files.length > 0 ? (
+          <div>
+            <div className="hidden md:block w-full overflow-x-auto">
+              <Table className="min-w-full">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead>Content Type</TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead></TableHead>
+                    <TableHead>Created At</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-          <div className="md:hidden space-y-4">
-            {files.map((file: any) => (
-              <div key={file.id} className="p-4 border rounded-lg">
-                <div className="flex items-center gap-2">
-                  <File size={20} />
-                  <p className="font-semibold">{file.name}</p>
+                </TableHeader>
+                <TableBody>
+                  {files.map((file: any) => (
+                    <TableRow key={file.id} className="cursor-pointer">
+                      <TableCell>
+                        <File size={20} />
+                      </TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{file.name}</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{file.contentType}</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{dateToString(file.createdAt)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <div className="md:hidden space-y-4">
+              {files.map((file: any) => (
+                <div key={file.id} className="p-4 border rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <File size={20} />
+                    <p className="font-semibold">{file.name}</p>
+                  </div>
+                  <p className="text-sm text-gray-500">{file.contentType}</p>
+                  <p className="text-xs text-gray-400">{dateToString(file.createdAt)}</p>
                 </div>
-                <p className="text-sm text-gray-500">{file.contentType}</p>
-                <p className="text-xs text-gray-400">{dateToString(file.createdAt)}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="relative min-h-screen">
+            <Empty className="border rounded-xl">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <FileQuestion />
+                </EmptyMedia>
+                <EmptyTitle>No files yet</EmptyTitle>
+              </EmptyHeader>
+            </Empty>
+          </div>
+          
+        )
       )}
     </div>
   );

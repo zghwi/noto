@@ -69,7 +69,7 @@ function NewFile() {
           type="file"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
         />
-        <Button onClick={handleUpload} disabled={loading}>
+        <Button onClick={handleUpload} disabled={loading || file == null}>
           {loading ? <Spinner /> : "Upload"}
         </Button>
       </DialogContent>

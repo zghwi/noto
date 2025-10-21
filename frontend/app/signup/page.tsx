@@ -1,6 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,6 @@ import {
 import { toast } from "sonner";
 import Link from "next/link";
 import * as z from "zod";
-import jwt from "jsonwebtoken";
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -29,20 +29,8 @@ export default function Signup() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // if (token) {
-    //     redirect("/~");
-    // }
     if (token) {
-      try {
-        const _d = jwt.verify(
-          token as string,
-          process.env["JWT_SECRET"] as string,
-        );
-        console.log("verified");
         redirect("/~");
-      } catch {
-        localStorage.removeItem("token");
-      }
     }
   }, []);
   async function handleSignup() {
@@ -83,8 +71,8 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <Card className="w-[400px]">
-        <CardHeader>
-          <CardTitle>Create Account</CardTitle>
+        <CardHeader className="flex flex-col items-center">
+          <Image src="/logo_png.png" alt="logo" width={165} height={200} />
         </CardHeader>
         <CardContent className="space-y-4">
           <div>

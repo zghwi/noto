@@ -1,6 +1,7 @@
 "use client";
 
 import { redirect, useRouter } from "next/navigation";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
-import jwt from "jsonwebtoken";
 
 export default function SigninPage() {
   const [username, setUsername] = useState("");
@@ -23,16 +23,7 @@ export default function SigninPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      try {
-        const _d = jwt.verify(
-          token as string,
-          process.env["JWT_SECRET"] as string,
-        );
-        console.log("verified");
-        redirect("/~");
-      } catch {
-        localStorage.removeItem("token");
-      }
+      redirect("/~");
     }
   }, []);
 
@@ -57,8 +48,8 @@ export default function SigninPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <Card className="w-[400px]">
-        <CardHeader>
-          <CardTitle>Sign In</CardTitle>
+        <CardHeader className="flex flex-col items-center">
+          <Image src="/logo_png.png" alt="logo" width={165} height={200} />
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
