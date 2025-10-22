@@ -30,7 +30,7 @@ export default function Signup() {
     const token = localStorage.getItem("token");
 
     if (token) {
-        redirect("/~");
+      redirect("/~");
     }
   }, []);
   async function handleSignup() {
