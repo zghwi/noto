@@ -17,13 +17,15 @@ You must extract important knowledge points and transform them into testable que
   Array<{  
     "question": string,  
     "options": string[],  
-    "answer_idx": number  
+    "answer_idx": number,
+    "explanation": string
   }>
 - Return the JSON output in one line.
-- 'answer_idx' must be the 0-based index of the correct option.  
+- 'answer_idx' must be the 0-based index of the correct option.
+- 'explanation' is a brief explanation of the correct answer.
 
 [Output Format]  
-JSON array only, no extra text or explanation.  
+JSON array only, no extra text or information.
 `;
 
 export {

@@ -29,8 +29,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 export default function Files() {
+  const router = useRouter();
+
   const [files, setFiles] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -139,12 +142,12 @@ export default function Files() {
               </TableHeader>
               <TableBody>
                 {files.map((file: any) => (
-                  <TableRow key={file.id} className="cursor-pointer">
+                  <TableRow key={file.id}>
                     <TableCell>
                       <File size={20} />
                     </TableCell>
                     <TableCell></TableCell>
-                    <TableCell>{file.name}</TableCell>
+                    <TableCell onClick={() => router.replace(`/~/files/${file.id}`)} className="hover:underline cursor-pointer">{file.name}</TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
@@ -183,7 +186,7 @@ export default function Files() {
                 </div>
                 <div className="flex items-center gap-2">
                   <File size={20} />
-                  <p className="font-semibold">{file.name}</p>
+                  <p className="font-semibold hover:underline cursor-pointer" onClick={() => router.replace(`/~/files/${file.id}`)}>{file.name}</p>
                 </div>
                 <p className="text-sm text-gray-500">{file.contentType}</p>
                 <p className="text-xs text-gray-400">

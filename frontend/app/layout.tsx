@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
   },
 };
 
+const poppins = Poppins({ subsets: ['latin'], weight: ['600']})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="dark">
+      <body className={`dark ${poppins.className}`}>
         <main>{children}</main>
         <Toaster />
       </body>

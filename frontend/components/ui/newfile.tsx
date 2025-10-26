@@ -1,7 +1,8 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Plus, Upload, FileIcon } from "lucide-react";
 import { Button } from "./button";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
-import { Input } from "./input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import * as z from "zod";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
@@ -19,6 +19,7 @@ function NewFile() {
   const [file, setFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fileSchema = z.object({
     file: z
@@ -63,10 +64,36 @@ function NewFile() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New file</DialogTitle>
+          <DialogTitle>Upload new file</DialogTitle>
         </DialogHeader>
-        <Input
+        {/* <Input
           type="file"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        /> */}
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className={cn(
+            "flex flex-col items-center justify-center w-full p-6 mt-2 mb-3 border border-dashed rounded-lg cursor-pointer",
+            "hover:border-primary/60 transition-colors bg-muted/30"
+          )}
+        >
+          <Upload className="h-6 w-6 text-muted-foreground mb-2" />
+          <p className="text-sm text-muted-foreground">
+            {file ? (
+              <span className="flex items-center gap-2 text-foreground">
+                <FileIcon className="h-4 w-4 text-primary" />
+                <span className="truncate max-w-[200px]">{file.name}</span>
+              </span>
+            ) : (
+              "Click to choose a file"
+            )}
+          </p>
+        </div>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
         />
         <Button onClick={handleUpload} disabled={loading || file == null}>
