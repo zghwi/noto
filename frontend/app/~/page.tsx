@@ -15,7 +15,7 @@ export default function Root() {
     (async () => {
       setLoading(true);
       const user = await getUser();
-      setUser(user);
+      setUser(user.data);
       setLoading(false);
     })();
   }, []);

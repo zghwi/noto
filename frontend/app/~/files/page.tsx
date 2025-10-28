@@ -29,13 +29,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
 export default function Files() {
-  const router = useRouter();
-
   const [files, setFiles] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,7 +40,7 @@ export default function Files() {
     (async () => {
       setLoading(true);
       const files = await getFilesDetails();
-      setFiles(files);
+      setFiles(files.data);
       setLoading(false);
     })();
   }, []);
@@ -64,7 +61,7 @@ export default function Files() {
   const handleDelete = async (id: string) => {
     try {
       const d = await deleteFileById(id);
-      toast.success(d.message);
+      toast.success(d.data.message);
       setFiles((prev: any[]) => prev.filter((file) => file.id !== id));
     } catch (error) {
       toast.error("Failed to delete file");

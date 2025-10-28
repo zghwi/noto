@@ -1,20 +1,40 @@
+function errorType(code: number): string {
+  const statusMap: Record<number, string> = {
+    400: "Bad Request",
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Not Found",
+    408: "Request Timeout",
+    429: "Too Many Requests",
+    500: "Internal Server Error",
+    502: "Bad Gateway",
+    503: "Service Unavailable",
+    504: "Gateway Timeout",
+  };
+
+  if (statusMap[code]) {
+    return statusMap[code];
+  }
+
+  return "unknown";
+}
+
 async function authRequest(
   url: string,
   type?: "POST" | "DELETE" | "PUT" | "GET",
 ) {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    const res = await fetch(url, {
-      method: type ? type : "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) throw new Error("Failed to fetch data");
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    return err;
-  }
+  const token = localStorage.getItem("token");
+  // if (!token) return;
+  const res = await fetch(url, {
+    method: type ? type : "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return { error: true, type: errorType(res.status) };
+  const data = await res.json();
+  return {
+    error: false,
+    data: data
+  };
 }
 export async function getUser() {
   const data = await authRequest("http://localhost:5138/profile");
@@ -27,9 +47,14 @@ export async function getFiles() {
 }
 
 export async function getFilesDetails() {
-  const data = await getFiles();
+  let data = await getFiles();
+  //@ts-ignore
+  const excdata = data.data.map(({ data, ...rest }) => rest);
   // @ts-ignore
-  return data.map(({ data, ...rest }) => rest);
+  return {
+    ...data,
+    data: excdata
+  };
 }
 
 export async function getFileById(id: string) {
