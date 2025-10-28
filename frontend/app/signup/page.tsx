@@ -10,7 +10,6 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import Link from "next/link";

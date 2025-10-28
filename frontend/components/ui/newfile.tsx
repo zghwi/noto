@@ -66,10 +66,6 @@ function NewFile() {
         <DialogHeader>
           <DialogTitle>Upload new file</DialogTitle>
         </DialogHeader>
-        {/* <Input
-          type="file"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-        /> */}
         <div
           onClick={() => fileInputRef.current?.click()}
           className={cn(

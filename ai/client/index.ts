@@ -13,7 +13,7 @@ class Gemini {
         });
     }
 
-    async test() {
+    async test(q: number) {
         const pdf = await this.ai.files.upload({
             file: "C:\\Users\\zgjun\\Projects\\noto\\ai\\test.txt",
         });
@@ -21,7 +21,7 @@ class Gemini {
             model: "gemini-2.5-flash",
             contents: [
                 createUserContent([
-                    TEST_PROMPT,
+                    TEST_PROMPT(q),
                     createPartFromUri(pdf.uri as string, pdf.mimeType as string)
                 ])
             ]

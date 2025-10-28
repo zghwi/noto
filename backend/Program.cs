@@ -199,6 +199,29 @@ app.MapDelete("/files/{id:Guid}", async (Guid id, HttpContext http, AppDbContext
     return Results.Ok(new { message = "File deleted successfully" });
 }).RequireAuthorization();
 
+app.MapGet("/files/{id:Guid}", async (Guid id, HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var file = await db.Files.FirstOrDefaultAsync(f => f.Id == id && f.UserId == user.Id);
+    if (file == null)
+        return Results.NotFound(new { message = "File not found" });
+
+    return Results.Ok(new
+    {
+        Id = file.Id,
+        Name = file.Name,
+        ContentType = file.ContentType,
+        Data = file.Data
+    });
+});
+
 
 app.Run();
 

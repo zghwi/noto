@@ -32,6 +32,11 @@ export async function getFilesDetails() {
   return data.map(({ data, ...rest }) => rest);
 }
 
+export async function getFileById(id: string) {
+  const data = await authRequest(`http://localhost:5138/files/${id}`);
+  return data;
+}
+
 export async function deleteFileById(id: string) {
   const req = await authRequest(`http://localhost:5138/files/${id}`, "DELETE");
   return req;

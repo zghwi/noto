@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const items = [
   {
@@ -32,13 +32,14 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const r = pathname.split("/");
+  let ppath = "";
+  if (pathname == "/~") ppath = pathname;
+  else ppath = "/"+r[1]+"/"+r[2];
   return (
     <Sidebar variant="floating">
       <SidebarContent>
         <SidebarGroup>
-          {/* <SidebarGroupLabel>
-            <Image src="/favicon.png" alt="noto" height={40} width={40} />
-          </SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -46,7 +47,7 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     className={
-                      pathname == item.url ? "bg-primary hover:bg-primary" : ""
+                      ppath == item.url ? "bg-primary hover:bg-primary" : ""
                     }
                   >
                     <Link href={item.url}>

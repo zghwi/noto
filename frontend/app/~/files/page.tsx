@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { File, FileQuestion, Trash } from "lucide-react";
+import { File, FileQuestion, SlashIcon, Trash } from "lucide-react";
 import { deleteFileById, getFilesDetails } from "@/utils/api";
 import { useEffect, useState } from "react";
 import {
@@ -30,6 +30,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 export default function Files() {
   const router = useRouter();
@@ -102,7 +104,19 @@ export default function Files() {
       <div className="absolute right-10">
         <NewFile />
       </div>
-      <h2 className="text-3xl font-semibold">Your files</h2>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/~">~</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <SlashIcon />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+              <BreadcrumbPage>Your Files</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <br />
       {loading ? (
         <Spinner className="flex justify-center items-center h-full" />
@@ -147,7 +161,7 @@ export default function Files() {
                       <File size={20} />
                     </TableCell>
                     <TableCell></TableCell>
-                    <TableCell onClick={() => router.replace(`/~/files/${file.id}`)} className="hover:underline cursor-pointer">{file.name}</TableCell>
+                    <TableCell className="hover:underline cursor-pointer"><Link href={`/~/files/${file.id}`}>{file.name}</Link></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
@@ -186,7 +200,7 @@ export default function Files() {
                 </div>
                 <div className="flex items-center gap-2">
                   <File size={20} />
-                  <p className="font-semibold hover:underline cursor-pointer" onClick={() => router.replace(`/~/files/${file.id}`)}>{file.name}</p>
+                  <p className="font-semibold hover:underline cursor-pointer"><Link href={`/~/files/${file.id}`}>{file.name}</Link></p>
                 </div>
                 <p className="text-sm text-gray-500">{file.contentType}</p>
                 <p className="text-xs text-gray-400">
