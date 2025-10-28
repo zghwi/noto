@@ -29,7 +29,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
 export default function Files() {
@@ -80,9 +87,7 @@ export default function Files() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Are you sure?</DialogTitle>
-            <DialogDescription>
-              This action can't be undone.
-            </DialogDescription>
+            <DialogDescription>This action can't be undone.</DialogDescription>
             <Button
               onClick={() => handleDelete(file.id)}
               variant="destructive"
@@ -93,8 +98,8 @@ export default function Files() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -110,7 +115,7 @@ export default function Files() {
             <SlashIcon />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-              <BreadcrumbPage>Your Files</BreadcrumbPage>
+            <BreadcrumbPage>Your Files</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -158,7 +163,9 @@ export default function Files() {
                       <File size={20} />
                     </TableCell>
                     <TableCell></TableCell>
-                    <TableCell className="hover:underline cursor-pointer"><Link href={`/~/files/${file.id}`}>{file.name}</Link></TableCell>
+                    <TableCell className="hover:underline cursor-pointer">
+                      <Link href={`/~/files/${file.id}`}>{file.name}</Link>
+                    </TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
@@ -197,7 +204,9 @@ export default function Files() {
                 </div>
                 <div className="flex items-center gap-2">
                   <File size={20} />
-                  <p className="font-semibold hover:underline cursor-pointer"><Link href={`/~/files/${file.id}`}>{file.name}</Link></p>
+                  <p className="font-semibold hover:underline cursor-pointer">
+                    <Link href={`/~/files/${file.id}`}>{file.name}</Link>
+                  </p>
                 </div>
                 <p className="text-sm text-gray-500">{file.contentType}</p>
                 <p className="text-xs text-gray-400">

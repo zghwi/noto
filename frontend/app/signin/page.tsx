@@ -10,7 +10,6 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -38,7 +37,7 @@ export default function SigninPage() {
 
     if (res.ok) {
       localStorage.setItem("token", data.token);
-      router.replace("/~");
+      router.push("/~");
       toast.success(`Welcome ${data.name}!`);
     } else {
       toast.error("Invalid credentials");

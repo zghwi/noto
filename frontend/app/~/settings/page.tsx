@@ -1,5 +1,12 @@
 "use client";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +31,7 @@ export default function Settings() {
             <SlashIcon />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-              <BreadcrumbPage>Settings</BreadcrumbPage>
+            <BreadcrumbPage>Settings</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -40,7 +47,7 @@ export default function Settings() {
             <DialogTitle>Are you sure?</DialogTitle>
           </DialogHeader>
           <Button
-            onClick={() => router.replace("/signout")}
+            onClick={() => router.push("/signout")}
             className="cursor-pointer"
             variant="destructive"
           >

@@ -14,8 +14,11 @@ import { useRef, useState } from "react";
 import * as z from "zod";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
+import { useRouter } from "next/navigation";
 
 function NewFile() {
+  const router = useRouter();
+
   const [file, setFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -44,11 +47,13 @@ function NewFile() {
       },
       body: formData,
     });
+    const data = await res.json();
     setLoading(false);
 
     if (res.ok) {
       setOpen(false);
       toast.success("File uploaded successfully");
+      router.push(`/~/files/${data.id}`);
     } else {
       const err = await res.text();
       console.log(err);
@@ -70,7 +75,7 @@ function NewFile() {
           onClick={() => fileInputRef.current?.click()}
           className={cn(
             "flex flex-col items-center justify-center w-full p-6 mt-2 mb-3 border border-dashed rounded-lg cursor-pointer",
-            "hover:border-primary/60 transition-colors bg-muted/30"
+            "hover:border-primary/60 transition-colors bg-muted/30",
           )}
         >
           <Upload className="h-6 w-6 text-muted-foreground mb-2" />

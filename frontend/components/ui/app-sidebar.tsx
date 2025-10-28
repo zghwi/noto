@@ -35,7 +35,7 @@ export function AppSidebar() {
   const r = pathname.split("/");
   let ppath = "";
   if (pathname == "/~") ppath = pathname;
-  else ppath = "/"+r[1]+"/"+r[2];
+  else ppath = "/" + r[1] + "/" + r[2];
   return (
     <Sidebar variant="floating">
       <SidebarContent>

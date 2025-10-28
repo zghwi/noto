@@ -33,7 +33,7 @@ async function authRequest(
   const data = await res.json();
   return {
     error: false,
-    data: data
+    data: data,
   };
 }
 export async function getUser() {
@@ -53,7 +53,7 @@ export async function getFilesDetails() {
   // @ts-ignore
   return {
     ...data,
-    data: excdata
+    data: excdata,
   };
 }
 
