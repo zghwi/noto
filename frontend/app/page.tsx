@@ -55,7 +55,7 @@ export default function NotoLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <img src="/logo_png.png" alt="Noto" className="h-31 w-31" />
+              <img src="/logo_png.png" alt="Noto" className="h-29 w-29" />
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
@@ -63,7 +63,7 @@ export default function NotoLanding() {
               <a href="#how-it-works" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">How It Works</a>
               <button className="px-6 py-2 rounded-full text-white font-medium transition-all hover:scale-105" 
                       style={{ backgroundColor: 'oklch(0.606 0.25 292.717)' }}>
-                <Link href="/signin">Get Started</Link>
+                <Link href="/signup">Get Started</Link>
               </button>
             </div>
 
@@ -83,7 +83,7 @@ export default function NotoLanding() {
               <a href="#how-it-works" className="block text-gray-700 dark:text-gray-300">How It Works</a>
               <button className="w-full px-6 py-2 rounded-full text-white font-medium" 
                       style={{ backgroundColor: 'oklch(0.606 0.25 292.717)' }}>
-                <Link href="/signin">Get Started</Link>
+                <Link href="/signup">Get Started</Link>
               </button>
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function NotoLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button className="group px-8 py-4 rounded-full text-white font-semibold text-lg transition-all hover:scale-105 flex items-center space-x-2 shadow-lg hover:shadow-xl"
                       style={{ backgroundColor: 'oklch(0.606 0.25 292.717)' }}>
-                <Link href="/signin">Start Learning</Link>
+                <Link href="/signup">Start Learning</Link>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -218,7 +218,7 @@ export default function NotoLanding() {
               </div>
               <button className="mt-8 px-8 py-4 bg-white rounded-full font-semibold text-lg hover:scale-105 transition-all shadow-lg"
                       style={{ color: 'oklch(0.606 0.25 292.717)' }}>
-                <Link href="/signin">Become a smart student</Link>
+                <Link href="/signup">Become a smart student</Link>
               </button>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function NotoLanding() {
           </p>
           <button className="px-10 py-5 rounded-full text-white font-semibold text-xl transition-all hover:scale-105 shadow-xl hover:shadow-2xl"
                   style={{ backgroundColor: 'oklch(0.606 0.25 292.717)' }}>
-            <Link href="/signin">Get started</Link>
+            <Link href="/signup">Get started</Link>
           </button>
         </div>
       </section>

@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Spinner } from "./spinner";
 import { useRouter } from "next/navigation";
 
-function NewFile() {
+function NewFile({ props }: { props?: HTMLElement }) {
   const router = useRouter();
 
   const [file, setFile] = useState<File | null>(null);
