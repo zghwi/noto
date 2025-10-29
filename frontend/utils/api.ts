@@ -49,11 +49,15 @@ export async function getFiles() {
 export async function getFilesDetails() {
   let data = await getFiles();
   //@ts-ignore
-  const excdata = data.data.map(({ data, ...rest }) => rest);
-  // @ts-ignore
+  if (!data.error) {
+    return {
+      ...data, //@ts-ignore
+      data: data.data.map(({ data, ...rest }) => rest)
+    }
+  }
   return {
     ...data,
-    data: excdata,
+    data: [],
   };
 }
 

@@ -2,9 +2,12 @@
 
 import { Spinner } from "@/components/ui/spinner";
 import { getUser } from "@/utils/api";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Root() {
+  const router = useRouter();
   const [user, setUser] = useState<{
     id: string;
     name: string;
@@ -15,8 +18,15 @@ export default function Root() {
     (async () => {
       setLoading(true);
       const user = await getUser();
-      setUser(user.data);
-      setLoading(false);
+      if (user.error) {
+        if (user.type == "Unauthorized") {
+          toast.error("Session expired");
+        }
+        router.push("/signin");
+      } else {
+        setUser(user.data);
+        setLoading(false);
+      }
     })();
   }, []);
 

@@ -38,17 +38,27 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Files() {
+  const router = useRouter();
   const [files, setFiles] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
       setLoading(true);
       const files = await getFilesDetails();
-      setFiles(files.data);
-      setLoading(false);
+      if (files.error) {
+        if (files.type == "Unauthorized") {
+          toast.error("Session expired");
+        }
+        router.push("/signin");
+      } else {
+        setFiles(files.data);
+        setLoading(false);
+      }
     })();
   }, []);
 
@@ -67,12 +77,18 @@ export default function Files() {
 
   const handleDelete = async (id: string) => {
     try {
+      setDeletingId(id);
       const d = await deleteFileById(id);
       toast.success(d.data.message);
-      setFiles((prev: any[]) => prev.filter((file) => file.id !== id));
+
+      setTimeout(() => {
+        setFiles((prev: any[]) => prev.filter((file) => file.id !== id));
+        setDeletingId(null);
+      }, 300);
     } catch (error) {
       toast.error("Failed to delete file");
       console.error(error);
+      setDeletingId(null);
     }
   };
 
@@ -80,8 +96,12 @@ export default function Files() {
     return (
       <Dialog>
         <DialogTrigger asChild className="cursor-pointer">
-          <Button variant="destructive" className="border rounded-full">
-            <Trash />
+          <Button 
+            variant="destructive" 
+            size="icon"
+            className="rounded-full h-8 w-8 transition-all hover:scale-110"
+          >
+            <Trash className="h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -93,7 +113,7 @@ export default function Files() {
               variant="destructive"
               className="cursor-pointer"
             >
-              Yes
+              Yes, delete file
             </Button>
           </DialogHeader>
         </DialogContent>
@@ -101,127 +121,167 @@ export default function Files() {
     );
   };
 
+  const FileRow = ({ file, index }: { file: any; index: number }) => {
+    const isDeleting = deletingId === file.id;
+    
+    return (
+      <TableRow 
+        key={file.id}
+        className={`group transition-all duration-300 ${
+          isDeleting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+        }`}
+        style={{
+          animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`
+        }}
+      >
+        <TableCell className="w-12">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            <File className="h-5 w-5 text-primary" />
+          </div>
+        </TableCell>
+        <TableCell className="font-medium">
+          <Link 
+            href={`/~/files/${file.id}`}
+            className="hover:text-primary transition-colors hover:underline"
+          >
+            {file.name}
+          </Link>
+        </TableCell>
+        <TableCell className="w-30"></TableCell>
+        <TableCell className="text-muted-foreground">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
+            {file.contentType}
+          </span>
+        </TableCell>
+        <TableCell className="w-30"></TableCell>
+        <TableCell className="text-muted-foreground text-sm">
+          {dateToString(file.createdAt)}
+        </TableCell>
+        <TableCell className="text-right">
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <DeleteDialog file={file} />
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+  const MobileFileCard = ({ file, index }: { file: any; index: number }) => {
+    const isDeleting = deletingId === file.id;
+    
+    return (
+      <div 
+        key={file.id}
+        className={`group relative p-4 border rounded-xl bg-card hover:shadow-md hover:border-primary/50 transition-all duration-300 ${
+          isDeleting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+        }`}
+        style={{
+          animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`
+        }}
+      >
+        <div className="absolute -top-2 -right-2 z-10">
+          <DeleteDialog file={file} />
+        </div>
+        <div className="flex items-start gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 flex-shrink-0">
+            <File className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <Link href={`/~/files/${file.id}`}>
+              <p className="font-semibold hover:text-primary transition-colors hover:underline truncate">
+                {file.name}
+              </p>
+            </Link>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                {file.contentType}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              {dateToString(file.createdAt)}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div>
+    <div className="space-y-6">
+      <style jsx global>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+
       <div className="absolute right-10">
         <NewFile />
       </div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/~">~</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <SlashIcon />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>Your Files</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <br />
+
+      <div className="flex items-center justify-between">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/~">~</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <SlashIcon />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Your Files</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+
       {loading ? (
-        <Spinner className="flex justify-center items-center h-full" />
+        <div className="flex justify-center items-center py-20">
+          <Spinner />
+        </div>
       ) : files.length > 0 ? (
         <div>
-          <div className="hidden md:block w-full overflow-x-auto">
-            <Table className="min-w-full">
-              <TableHeader>
-                <TableRow>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Content Type</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Created At</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {files.map((file: any) => (
-                  <TableRow key={file.id}>
-                    <TableCell>
-                      <File size={20} />
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell className="hover:underline cursor-pointer">
-                      <Link href={`/~/files/${file.id}`}>{file.name}</Link>
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{file.contentType}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{dateToString(file.createdAt)}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>
-                      <DeleteDialog file={file} />
-                    </TableCell>
+          <div className="hidden md:block">
+            <div className="border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-12"></TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead className="w-30"></TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead className="w-30"></TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead className="w-17"></TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {files.map((file: any, index: number) => (
+                    <FileRow key={file.id} file={file} index={index} />
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-          <div className="md:hidden space-y-4">
-            {files.map((file: any) => (
-              <div key={file.id} className="p-4 border rounded-lg relative">
-                <div className="absolute -top-2 -right-2 z-10">
-                  <DeleteDialog file={file} />
-                </div>
-                <div className="flex items-center gap-2">
-                  <File size={20} />
-                  <p className="font-semibold hover:underline cursor-pointer">
-                    <Link href={`/~/files/${file.id}`}>{file.name}</Link>
-                  </p>
-                </div>
-                <p className="text-sm text-gray-500">{file.contentType}</p>
-                <p className="text-xs text-gray-400">
-                  {dateToString(file.createdAt)}
-                </p>
-              </div>
+
+          <div className="md:hidden space-y-3">
+            {files.map((file: any, index: number) => (
+              <MobileFileCard key={file.id} file={file} index={index} />
             ))}
           </div>
         </div>
       ) : (
-        <div>
+        <div className="py-12">
           <Empty className="border rounded-xl">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <FileQuestion />
+                <FileQuestion className="h-12 w-12" />
               </EmptyMedia>
               <EmptyTitle>No files yet</EmptyTitle>
             </EmptyHeader>

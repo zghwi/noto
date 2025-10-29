@@ -14,7 +14,7 @@ export default function RootLayout({
     const token = localStorage.getItem("token");
 
     if (!token) {
-      redirect("/signin");
+      redirect("/");
     }
   }, []);
   return (

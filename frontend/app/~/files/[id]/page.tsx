@@ -40,12 +40,11 @@ export default function FileById() {
     (async () => {
       setLoading(true);
       const file = await getFileById(id as string);
-      console.log(file);
       if (file.error) {
         if (file.type == "Not Found") setFile(null);
         if (file.type == "Unauthorized") {
           localStorage.removeItem("token");
-          redirect("/signin");
+          redirect("/");
         }
       } else setFile(file.data);
       setLoading(false);
