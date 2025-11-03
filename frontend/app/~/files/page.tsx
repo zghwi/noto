@@ -160,7 +160,7 @@ export default function Files() {
         <TableCell className="font-medium">
           <Link 
             href={`/~/files/${file.id}`}
-            className="hover:text-primary transition-colors hover:underline flex items-center gap-2"
+            className="hover:text-primary transition-colors hover:underline flex items-center gap-2 max-w-screen"
           >
             {file.name}
           </Link>
@@ -233,12 +233,12 @@ export default function Files() {
         <div className="absolute -top-2 -right-2 z-10">
           <DeleteDialog file={file} />
         </div>
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 max-w-[220px]">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 flex-shrink-0">
             <File className="h-5 w-5 text-primary" />
           </div>
-          <div className="flex-1 min-w-0">
-            <Link href={`/~/files/${file.id}`}>
+          <div className="flex-1 min-w-0 overflow-hidden">
+            <Link href={`/~/files/${file.id}`} className="block">
               <p className="font-semibold hover:text-primary transition-colors hover:underline truncate">
                 {file.name}
               </p>

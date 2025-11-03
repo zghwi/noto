@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { toast } from "sonner";
+import { isAuthorized } from "@/utils/api";
 
 export default function SigninPage() {
   const [username, setUsername] = useState("");
@@ -24,10 +25,10 @@ export default function SigninPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      redirect("/~");
-    }
+    (async () => {
+      const ok = await isAuthorized();
+      if (ok) redirect("/~");
+    })();
   }, []);
 
   async function handleLogin() {

@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import Link from "next/link";
 import * as z from "zod";
+import { isAuthorized } from "@/utils/api";
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -32,11 +33,10 @@ export default function Signup() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      redirect("/~");
-    }
+    (async () => {
+      const ok = await isAuthorized();
+      if (ok) redirect("/~");
+    })();
   }, []);
 
   async function handleSignup() {

@@ -169,8 +169,9 @@ export default function Root() {
 
       <div 
         className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8 md:p-12 border border-primary/20"
+        style={{ animation: 'scaleIn 0.6s ease-out' }}
       >
-        <div className="absolute top-4 right-4 text-4xl">
+        <div className="absolute top-4 right-4 text-4xl" style={{ animation: 'float 3s ease-in-out infinite' }}>
           {getGreetingEmoji()}
         </div>
         

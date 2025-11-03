@@ -4,14 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, BookOpen, Brain, Zap, Check, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { isAuthorized } from '@/utils/api';
 
 export default function NotoLanding() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) redirect("/~");
+    (async () => {
+      const ok = await isAuthorized();
+      if (ok) redirect("/~");
+    })();
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };

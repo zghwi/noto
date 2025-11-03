@@ -24,8 +24,7 @@ async function authRequest(
   type?: "POST" | "DELETE" | "PUT" | "GET",
 ) {
   const token = localStorage.getItem("token");
-  // if (!token) return;
-  const res = await fetch(url, {
+  const res = await fetch(process.env['NEXT_PUBLIC_API_URL']+url, {
     method: type ? type : "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -37,18 +36,24 @@ async function authRequest(
   };
 }
 export async function getUser() {
-  const data = await authRequest("http://localhost:5138/profile");
+  const data = await authRequest("/profile");
   return data;
 }
 
+
+export async function isAuthorized() {
+  const res = await getUser();
+  if (res.error) return false;
+  return true;
+}
+
 export async function getFiles() {
-  const data = await authRequest("http://localhost:5138/files");
+  const data = await authRequest("/files");
   return data;
 }
 
 export async function getFilesDetails() {
   let data = await getFiles();
-  //@ts-ignore
   if (!data.error) {
     return {
       ...data, //@ts-ignore
@@ -62,11 +67,11 @@ export async function getFilesDetails() {
 }
 
 export async function getFileById(id: string) {
-  const data = await authRequest(`http://localhost:5138/files/${id}`);
+  const data = await authRequest(`/files/${id}`);
   return data;
 }
 
 export async function deleteFileById(id: string) {
-  const req = await authRequest(`http://localhost:5138/files/${id}`, "DELETE");
+  const req = await authRequest(`/files/${id}`, "DELETE");
   return req;
 }
