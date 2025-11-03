@@ -10,7 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { File, FileQuestion, SlashIcon, Trash, Search, LayoutGrid, List } from "lucide-react";
+import {
+  File,
+  FileQuestion,
+  SlashIcon,
+  Trash,
+  Search,
+  LayoutGrid,
+  List,
+} from "lucide-react";
 import { deleteFileById, getFilesDetails } from "@/utils/api";
 import { useEffect, useState } from "react";
 import {
@@ -71,9 +79,10 @@ export default function Files() {
     if (searchQuery.trim() === "") {
       setFilteredFiles(files);
     } else {
-      const filtered = files.filter((file: any) =>
-        file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        file.contentType.toLowerCase().includes(searchQuery.toLowerCase())
+      const filtered = files.filter(
+        (file: any) =>
+          file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          file.contentType.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredFiles(filtered);
     }
@@ -113,8 +122,8 @@ export default function Files() {
     return (
       <Dialog>
         <DialogTrigger asChild className="cursor-pointer">
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             size="icon"
             className="rounded-full h-8 w-8 transition-all hover:scale-110"
           >
@@ -125,7 +134,8 @@ export default function Files() {
           <DialogHeader>
             <DialogTitle>Delete "{file.name}"?</DialogTitle>
             <DialogDescription>
-              This action can't be undone. This will permanently delete your file.
+              This action can't be undone. This will permanently delete your
+              file.
             </DialogDescription>
             <div className="flex gap-3 pt-4">
               <Button
@@ -144,12 +154,12 @@ export default function Files() {
 
   const FileRow = ({ file, index }: { file: any; index: number }) => {
     const isDeleting = deletingId === file.id;
-    
+
     return (
-      <TableRow 
+      <TableRow
         key={file.id}
         className={`group transition-all duration-300 hover:bg-muted/50 ${
-          isDeleting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          isDeleting ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
       >
         <TableCell className="w-12">
@@ -158,7 +168,7 @@ export default function Files() {
           </div>
         </TableCell>
         <TableCell className="font-medium">
-          <Link 
+          <Link
             href={`/~/files/${file.id}`}
             className="hover:text-primary transition-colors hover:underline flex items-center gap-2 max-w-screen"
           >
@@ -184,20 +194,20 @@ export default function Files() {
     );
   };
 
-  const FileCard = ({ file }: { file: any; }) => {
+  const FileCard = ({ file }: { file: any }) => {
     const isDeleting = deletingId === file.id;
-    
+
     return (
-      <div 
+      <div
         key={file.id}
         className={`group relative p-6 border rounded-xl bg-card hover:shadow-lg hover:border-primary/50 transition-all duration-300 ${
-          isDeleting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          isDeleting ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
       >
         <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
           <DeleteDialog file={file} />
         </div>
-        
+
         <Link href={`/~/files/${file.id}`} className="block">
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
@@ -222,12 +232,12 @@ export default function Files() {
 
   const MobileFileCard = ({ file }: { file: any }) => {
     const isDeleting = deletingId === file.id;
-    
+
     return (
-      <div 
+      <div
         key={file.id}
         className={`group relative p-4 border rounded-xl bg-card hover:shadow-md hover:border-primary/50 transition-all duration-300 ${
-          isDeleting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          isDeleting ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
       >
         <div className="absolute -top-2 -right-2 z-10">
@@ -303,9 +313,7 @@ export default function Files() {
         </div>
 
         {!loading && files.length > 0 && (
-          <div 
-            className="flex flex-col sm:flex-row gap-3"
-          >
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -388,7 +396,9 @@ export default function Files() {
                 <FileQuestion className="h-12 w-12" />
               </EmptyMedia>
               <EmptyTitle>
-                {searchQuery ? `No files matching "${searchQuery}"` : "No files yet"}
+                {searchQuery
+                  ? `No files matching "${searchQuery}"`
+                  : "No files yet"}
               </EmptyTitle>
             </EmptyHeader>
           </Empty>

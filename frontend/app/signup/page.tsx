@@ -92,16 +92,18 @@ export default function Signup() {
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-2 text-center">
           <div className="flex justify-center mb-4">
-            <Image 
-              src="/logo_png.png" 
+            <Image
+              src="/logo_png.png"
               alt="Noto logo"
               className="cursor-pointer"
               onClick={() => router.push("/")}
-              width={150} 
+              width={150}
               height={100}
             />
           </div>
-          <CardTitle className="text-2xl font-semibold">Create your account</CardTitle>
+          <CardTitle className="text-2xl font-semibold">
+            Create your account
+          </CardTitle>
           <CardDescription>
             Start transforming your notes into learning tools
           </CardDescription>

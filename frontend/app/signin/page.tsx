@@ -68,12 +68,12 @@ export default function SigninPage() {
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-2 text-center">
           <div className="flex justify-center mb-4">
-            <Image 
-              src="/logo_png.png" 
+            <Image
+              src="/logo_png.png"
               alt="Noto logo"
               className="cursor-pointer"
               onClick={() => router.push("/")}
-              width={150} 
+              width={150}
               height={100}
             />
           </div>

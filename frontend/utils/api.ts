@@ -24,8 +24,8 @@ async function authRequest(
   type?: "POST" | "DELETE" | "PUT" | "GET",
 ) {
   const token = localStorage.getItem("token");
-  const res = await fetch(process.env['NEXT_PUBLIC_API_URL']+url, {
-    method: type ? type : "GET",
+  const res = await fetch(process.env["NEXT_PUBLIC_API_URL"] + url, {
+    method: type || "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) return { error: true, type: errorType(res.status) };
@@ -39,7 +39,6 @@ export async function getUser() {
   const data = await authRequest("/profile");
   return data;
 }
-
 
 export async function isAuthorized() {
   const res = await getUser();
@@ -57,8 +56,8 @@ export async function getFilesDetails() {
   if (!data.error) {
     return {
       ...data, //@ts-ignore
-      data: data.data.map(({ data, ...rest }) => rest)
-    }
+      data: data.data.map(({ data, ...rest }) => rest),
+    };
   }
   return {
     ...data,
