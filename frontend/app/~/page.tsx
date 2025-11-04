@@ -259,7 +259,7 @@ export default function Root() {
 
         {files && files.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {files?.slice(0, 4).map((file) => (
+            {files?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 4).map((file) => (
               <Link
                 key={file.id}
                 href={`/~/files/${file.id}`}
