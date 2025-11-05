@@ -5,13 +5,14 @@ import { getUser, getFilesDetails } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
+import { 
   FileText,
   ArrowRight,
   Plus,
   School,
   File,
   Layers,
+  TrendingUp,
   Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,14 +25,12 @@ export default function Root() {
     name: string;
     username: string;
   }>();
-  const [files, setFiles] = useState<
-    {
-      id: string;
-      name: string;
-      createdAt: string;
-      contentType: string;
-    }[]
-  >();
+  const [files, setFiles] = useState<{
+    id: string,
+    name: string,
+    createdAt: string,
+    contentType: string
+  }[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [timeOfDay, setTimeOfDay] = useState<string>("");
 
@@ -100,13 +99,13 @@ export default function Root() {
     {
       icon: <School className="h-5 w-5" />,
       label: "Average Quiz Score",
-      value: 90.6,
+      value: 91.6,
       color: "text-green-500",
       bgColor: "bg-green-500/10",
     },
     {
       icon: <FileText className="h-5 w-5" />,
-      label: (files?.length as number) > 1 ? "Files Uploaded" : "File Uploaded",
+      label: files?.length as number > 1 ? "Files Uploaded" : "File Uploaded",
       value: files?.length,
       color: "text-blue-500",
       bgColor: "bg-blue-500/10",
@@ -117,19 +116,19 @@ export default function Root() {
       value: "0",
       color: "text-purple-500",
       bgColor: "bg-purple-500/10",
-    },
+    }
   ];
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <Spinner className="h-8 w-8" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-8 pb-8 w-full">
       <style jsx global>{`
         @keyframes fadeInUp {
           from {
@@ -152,8 +151,7 @@ export default function Root() {
           }
         }
         @keyframes float {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateY(0px);
           }
           50% {
@@ -170,17 +168,14 @@ export default function Root() {
         }
       `}</style>
 
-      <div
+      <div 
         className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8 md:p-12 border border-primary/20"
-        style={{ animation: "scaleIn 0.6s ease-out" }}
+        style={{ animation: 'scaleIn 0.6s ease-out' }}
       >
-        <div
-          className="absolute top-4 right-4 text-4xl"
-          style={{ animation: "float 3s ease-in-out infinite" }}
-        >
+        <div className="absolute top-4 right-4 text-4xl" style={{ animation: 'float 3s ease-in-out infinite' }}>
           {getGreetingEmoji()}
         </div>
-
+        
         <div className="relative z-10 max-w-3xl">
           <p className="text-sm font-medium text-muted-foreground mb-2 uppercase tracking-wider">
             Good {timeOfDay}
@@ -192,9 +187,9 @@ export default function Root() {
             Ready to turn your notes into interactive learning experiences?
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button
-              size="lg"
-              variant="outline"
+            <Button 
+              size="lg" 
+              variant="outline" 
               className="rounded-full group"
               asChild
             >
@@ -215,31 +210,27 @@ export default function Root() {
           <div
             key={stat.label}
             className="group relative overflow-hidden rounded-xl border bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
+            style={{ animation: `fadeInUp 0.5s ease-out ${index * 0.1 + 0.2}s both` }}
           >
             <div className="flex items-start justify-between mb-4">
-              <div
-                className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor} ${stat.color} group-hover:scale-110 transition-transform`}
-              >
+              <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor} ${stat.color} group-hover:scale-110 transition-transform`}>
                 {stat.icon}
               </div>
+              {index === 0 && (
+                <TrendingUp className="h-4 w-4 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              )}
             </div>
             <div>
-              <p
-                className={`text-3xl font-bold mb-1 ${
-                  index === 0
-                    ? (stat.value as number) >= 90
-                      ? "text-green-500"
-                      : (stat.value as number) >= 60
-                        ? "text-orange-500"
-                        : "text-red-500"
-                    : ""
-                }`}
-              >
-                {index === 0 ? stat.value + "%" : stat.value}
+              <p className={`text-3xl font-bold mb-1 ${
+                index === 0 ? (
+                  stat.value as number >= 90 ? "text-green-500" : (
+                    stat.value as number >= 70 ? "text-orange-500" : "text-red-500"
+                  )
+                ) : ""
+              }`}>
+                {index === 0 ? stat.value + '%' : stat.value}
               </p>
-              <p className="text-sm font-medium text-muted-foreground">
-                {stat.label}
-              </p>
+              <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
             </div>
           </div>
         ))}
@@ -248,8 +239,8 @@ export default function Root() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Recently Uploaded</h2>
-          <Link
-            href="/~/files"
+          <Link 
+            href="/~/files" 
             className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 group"
           >
             View all
@@ -259,11 +250,14 @@ export default function Root() {
 
         {files && files.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {files?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 4).map((file) => (
-              <Link
+            {files?.slice(0, 4).map((file, index) => (
+              <Link 
                 key={file.id}
                 href={`/~/files/${file.id}`}
                 className="group relative p-4 border rounded-xl bg-card hover:shadow-md hover:border-primary/50 transition-all duration-300"
+                style={{
+                  animation: `fadeInUp 0.5s ease-out ${index * 0.1 + 0.6}s both`
+                }}
               >
                 <div className="flex items-start gap-3">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0 group-hover:scale-110">
@@ -282,14 +276,16 @@ export default function Root() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center p-12 border border-dashed rounded-xl bg-muted/30">
+          <div 
+            className="flex flex-col items-center justify-center p-12 border border-dashed rounded-xl bg-muted/30"
+            style={{ animation: 'fadeInUp 0.5s ease-out 0.6s both' }}
+          >
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
               <Upload className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-lg font-semibold mb-2">No files yet</h3>
             <p className="text-sm text-muted-foreground mb-4 text-center max-w-sm">
-              Upload your first notes to get started with AI-powered learning
-              tools
+              Upload your first notes to get started with AI-powered learning tools
             </p>
             <Button asChild className="rounded-full">
               <Link href="/~/files">

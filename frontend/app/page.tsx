@@ -14,16 +14,19 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isAuthorized } from "@/utils/api";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function NotoLanding() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const ok = await isAuthorized();
       if (ok) redirect("/~");
     })();
+    setLoading(false);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -64,6 +67,10 @@ export default function NotoLanding() {
     "Study smarter, not harder",
     "Access your materials anywhere",
   ];
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-slate-100 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-900">

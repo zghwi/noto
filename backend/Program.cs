@@ -196,7 +196,7 @@ app.MapDelete("/files/{id:Guid}", async (Guid id, HttpContext http, AppDbContext
     db.Files.Remove(file);
     await db.SaveChangesAsync();
 
-    return Results.Ok(new { message = "File deleted successfully" });
+    return Results.Ok(new { message = "'"+ file.Name + "' was deleted successfully" });
 }).RequireAuthorization();
 
 app.MapGet("/files/{id:Guid}", async (Guid id, HttpContext http, AppDbContext db) =>
