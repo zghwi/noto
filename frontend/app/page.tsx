@@ -24,9 +24,11 @@ export default function NotoLanding() {
   useEffect(() => {
     (async () => {
       const ok = await isAuthorized();
-      if (ok) redirect("/~");
+      if (ok) {
+        redirect("/~");
+      }
+      setLoading(false);
     })();
-    setLoading(false);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };

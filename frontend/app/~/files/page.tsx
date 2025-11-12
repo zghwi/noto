@@ -157,7 +157,7 @@ export default function Files() {
 
     return (
       <TableRow
-        key={file.id}
+        key={index}
         className={`group transition-all duration-300 hover:bg-muted/50 ${
           isDeleting ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}

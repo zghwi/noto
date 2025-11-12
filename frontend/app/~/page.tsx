@@ -12,7 +12,6 @@ import {
   School,
   File,
   Layers,
-  TrendingUp,
   Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -99,7 +98,7 @@ export default function Root() {
     {
       icon: <School className="h-5 w-5" />,
       label: "Average Quiz Score",
-      value: 91.6,
+      value: files?.length == 0 ? "--" : 91.6,
       color: "text-green-500",
       bgColor: "bg-green-500/10",
     },
@@ -113,7 +112,7 @@ export default function Root() {
     {
       icon: <Layers className="h-5 w-5" />,
       label: "Card Packs Generated",
-      value: "0",
+      value: 0,
       color: "text-purple-500",
       bgColor: "bg-purple-500/10",
     }
@@ -216,15 +215,12 @@ export default function Root() {
               <div className={`flex items-center justify-center w-12 h-12 rounded-lg ${stat.bgColor} ${stat.color} group-hover:scale-110 transition-transform`}>
                 {stat.icon}
               </div>
-              {index === 0 && (
-                <TrendingUp className="h-4 w-4 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-              )}
             </div>
             <div>
               <p className={`text-3xl font-bold mb-1 ${
                 index === 0 ? (
-                  stat.value as number >= 90 ? "text-green-500" : (
-                    stat.value as number >= 70 ? "text-orange-500" : "text-red-500"
+                  typeof stat.value === "number" && stat.value as number >= 90 ? "text-green-500" : (
+                    typeof stat.value === "number" && stat.value as number >= 70 ? "text-orange-500" : stat.value === "--" ? "text-gray-400" : "text-red-500"
                   )
                 ) : ""
               }`}>

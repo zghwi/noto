@@ -215,10 +215,10 @@ app.MapGet("/files/{id:Guid}", async (Guid id, HttpContext http, AppDbContext db
 
     return Results.Ok(new
     {
-        Id = file.Id,
-        Name = file.Name,
-        ContentType = file.ContentType,
-        Data = file.Data
+        file.Id,
+        file.Name,
+        file.ContentType,
+        file.Data
     });
 });
 

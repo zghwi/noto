@@ -1,7 +1,7 @@
 import { createPartFromUri, createUserContent, GoogleGenAI } from "@google/genai";
 import * as dotenv from "dotenv";
 
-import { QUIZ_PROMPT } from "./prompts";
+import { FLASHCARDS_PROMPT, QUIZ_PROMPT } from "./prompts";
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ class Gemini {
             model: "gemini-2.5-flash",
             contents: [
                 createUserContent([
-                    QUIZ_PROMPT(q),
+                    FLASHCARDS_PROMPT(q),
                     createPartFromUri(pdf.uri as string, pdf.mimeType as string)
                 ])
             ]

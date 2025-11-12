@@ -1,9 +1,9 @@
-const QUIZ_PROMPT = (q: number) => `
+export const QUIZ_PROMPT = (n: number) => `
 [Role]  
 You are an expert exam question generator who specializes in turning raw content into clear, fair, and challenging multiple-choice questions.  
 
 [Task]  
-Read the provided file (or image contents) and generate ${q} exam-style questions based only on the given material.  
+Read the provided file (or image contents) and generate ${n} exam-style questions based only on the given material.  
 
 [Context]  
 The file/image will contain data (text, tables, diagrams, or other relevant information).  
@@ -25,6 +25,30 @@ You must extract important knowledge points and transform them into testable que
 - no extra text or information.
 `;
 
-export {
-  QUIZ_PROMPT,
-};
+export const FLASHCARDS_PROMPT = (n: number) => `
+[Role]
+You are an expert flashcard generator who specializes in converting raw content into concise, accurate, and educational flashcards.
+
+[Task]
+Read the provided file (or image contents) and generate ${n} flashcards based **only** on the given material.
+
+[Context]
+The file/image will contain data (text, tables, diagrams, or other relevant information).
+You must identify key concepts, facts, definitions, and relationships, then express them as clear flashcards.
+
+[Constraints]
+
+* Only use information explicitly found in the file/image.
+* Each flashcard must include a "front" (question or prompt) and a "back" (answer or explanation).
+* Keep both sides concise and focused on a single concept or fact.
+* Return output strictly in JSON format:
+  Array<{ "front": string, "back": string }>
+* The "back" should provide a complete, self-contained answer or clarification.
+* Use the same language used in the file/image.
+
+[Output Format]
+
+* a single line of JSON data, not pretty printed.
+* no extra text or information.
+
+`;
