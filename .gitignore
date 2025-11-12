@@ -16,6 +16,8 @@ frontend/.env.local
 frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
+frontend/utils/test.ts
+frontend/utils/*.txt
 
 ai/.env
 ai/.env.local
@@ -24,6 +26,7 @@ ai/node_modules/
 ai/*.pdf
 ai/*.txt
 ai/*.docx
+ai/test.ts
 
 notes.md
 

@@ -1,3 +1,5 @@
+import AI from "./ai";
+
 function errorType(code: number): string {
   const statusMap: Record<number, string> = {
     400: "Bad Request",
@@ -22,11 +24,13 @@ function errorType(code: number): string {
 async function authRequest(
   url: string,
   type?: "POST" | "DELETE" | "PUT" | "GET",
+  body?: string
 ) {
   const token = localStorage.getItem("token");
   const res = await fetch(process.env["NEXT_PUBLIC_API_URL"] + url, {
     method: type || "GET",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: type === "POST" ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json"} : { Authorization: `Bearer ${token}` },
+    body: body
   });
   if (!res.ok) return { error: true, type: errorType(res.status) };
   const data = await res.json();
@@ -70,7 +74,38 @@ export async function getFileById(id: string) {
   return data;
 }
 
+export async function getFileByIdDetails(id: string) {
+  const result = await getFileById(id);
+  const { data: bigData, ...restData } = result.data;
+
+  return {
+    ...result,
+    data: restData
+  };
+}
+
+
 export async function deleteFileById(id: string) {
   const req = await authRequest(`/files/${id}`, "DELETE");
   return req;
 }
+
+export async function getQuizByFileId(fileId: string) {
+  const data = await authRequest(`/quizzes/${fileId}`);
+  return data;
+}
+
+export async function getFlashcardsByFileId(fileId: string) {
+  const data = await authRequest(`/cardspacks/${fileId}`);
+  console.log(data);
+  return data;
+}
+
+export async function createXByFileId(x: "quiz" | "flashcards", fileId: string, q: number) {
+  const file = await getFileById(fileId);
+  const ai = new AI(file.data.data, file.data.contentType);
+  const questions = await ai.generate(x, q);
+  const req = await authRequest(`/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`, "POST", x === "quiz" ? JSON.stringify({ questions }) : JSON.stringify({ cards: questions }));
+  return req;
+}
+

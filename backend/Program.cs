@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Expressions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -108,6 +109,60 @@ app.MapPost("/signin", async (AppDbContext db, LoginDto request, IConfiguration 
         username = user.Username,
         name = user.Name
     });
+});
+
+app.MapPost("/quizzes/{fileId:Guid}", async (Guid fileId, QuizDto body, HttpRequest request, AppDbContext db, HttpContext http) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+    var q = await db.Quizzes.FirstOrDefaultAsync(q => q.FileId == fileId && q.UserId == user.Id);
+    if (q != null)
+    {
+        db.Quizzes.Remove(q);
+        await db.SaveChangesAsync();
+    }
+    var quiz = new Quiz
+    {
+        Questions = body.questions,
+        UserId = user.Id,
+        FileId = fileId
+    };
+    db.Quizzes.Add(quiz);
+    await db.SaveChangesAsync();
+    return Results.Ok(new { message = "Quiz created successfully" });
+});
+
+app.MapPost("/cardspacks/{fileId:Guid}", async (Guid fileId, CardsPackDto body, HttpRequest request, AppDbContext db, HttpContext http) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var c = await db.CardsPacks.FirstOrDefaultAsync(cp => cp.FileId == fileId && cp.UserId == user.Id);
+    if (c != null)
+    {
+        db.CardsPacks.Remove(c);
+        await db.SaveChangesAsync();
+    }
+    var cardsPack = new CardsPack
+    {
+        Cards = body.cards,
+        UserId = user.Id,
+        FileId = fileId
+    };
+
+    db.CardsPacks.Add(cardsPack);
+    await db.SaveChangesAsync();
+    return Results.Ok(new { message = "Cards pack created successfully" });
 });
 
 app.MapPost("/upload", async (HttpRequest request, AppDbContext db, HttpContext http) =>
@@ -222,8 +277,53 @@ app.MapGet("/files/{id:Guid}", async (Guid id, HttpContext http, AppDbContext db
     });
 });
 
+app.MapGet("/quizzes/{fileId:Guid}", async (Guid fileId, HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+    var file = await db.Files.FirstOrDefaultAsync(f => f.Id == fileId && f.UserId == user.Id);
+    if (file == null)
+        return Results.NotFound(new { message = "File not found" });
+    var quiz = await db.Quizzes.FirstOrDefaultAsync(q => q.FileId == file.Id && q.UserId == user.Id);
+    if (quiz == null)
+        return Results.NotFound(new { message = "Quiz not found" });
+    return Results.Ok(new
+    {
+        quiz.Id,
+        quiz.Questions,
+        quiz.Score
+    });
+});
+
+app.MapGet("/cardspacks/{fileId:Guid}", async (Guid fileId, HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+    var file = await db.Files.FirstOrDefaultAsync(f => f.Id == fileId && f.UserId == user.Id);
+    if (file == null)
+        return Results.NotFound(new { message = "File not found" });
+    var cardspack = await db.CardsPacks.FirstOrDefaultAsync(c => c.FileId == file.Id && c.UserId == user.Id);
+    if (cardspack == null)
+        return Results.NotFound(new { message = "Pack not found" });
+    return Results.Ok(new
+    {
+        cardspack.Id,
+        cardspack.Cards,
+    });
+});
+
 
 app.Run();
 
 record SignupDto(string Name, string Username, string Password);
 record LoginDto(string Username, string Password);
+record QuizDto(string questions);
+record CardsPackDto(string cards);
