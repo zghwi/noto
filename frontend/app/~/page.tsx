@@ -1,7 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/ui/spinner";
-import { getUser, getFilesDetails } from "@/utils/api";
+import { getUser, getFilesDetails, quizAverage } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -32,9 +32,12 @@ export default function Root() {
   }[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [timeOfDay, setTimeOfDay] = useState<string>("");
+  const [quizAvg, setQuizAvg] = useState<number | "--">("--");
 
   useEffect(() => {
     (async () => {
+      const avg = await quizAverage();
+      setQuizAvg(avg);
       setLoading(true);
       const user = await getUser();
       const files = await getFilesDetails();
@@ -98,7 +101,7 @@ export default function Root() {
     {
       icon: <School className="h-5 w-5" />,
       label: "Average Quiz Score",
-      value: files?.length == 0 ? "--" : 91.6,
+      value: files?.length == 0 ? "--" : quizAvg,
       color: "text-green-500",
       bgColor: "bg-green-500/10",
     },
@@ -189,7 +192,7 @@ export default function Root() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="rounded-full group"
+              className="rounded-full group cursor-pointer"
               asChild
             >
               <Link href="/~/files">
@@ -283,7 +286,7 @@ export default function Root() {
             <p className="text-sm text-muted-foreground mb-4 text-center max-w-sm">
               Upload your first notes to get started with AI-powered learning tools
             </p>
-            <Button asChild className="rounded-full">
+            <Button asChild className="rounded-full cursor-pointer">
               <Link href="/~/files">
                 <Plus className="h-4 w-4 mr-2" />
                 Upload First File

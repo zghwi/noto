@@ -150,7 +150,7 @@ export default function Signup() {
           <Button
             onClick={handleSignup}
             disabled={isLoading}
-            className="w-full bg-[oklch(0.606_0.25_292.717)] hover:bg-[oklch(0.556_0.25_292.717)]"
+            className="w-full cursor-pointer bg-[oklch(0.606_0.25_292.717)] hover:bg-[oklch(0.556_0.25_292.717)]"
           >
             {isLoading ? "Creating account..." : "Sign up"}
           </Button>

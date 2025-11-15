@@ -337,7 +337,7 @@ export default function FileById() {
                 <div className="flex flex-col gap-2 pt-2">
                   {existingQuiz.score === -1 && (
                     <Link href={`/~/files/${id}/quiz`} className="w-full">
-                      <Button className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow">
+                      <Button className="w-full rounded-full cursor-pointer group/btn shadow-md hover:shadow-lg transition-shadow">
                         Start Quiz
                         <ArrowRight className="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
@@ -347,7 +347,7 @@ export default function FileById() {
                   <Button 
                     onClick={handleCopyQuizLink} 
                     variant="outline" 
-                    className="w-full rounded-full"
+                    className="w-full rounded-full cursor-pointer"
                   >
                     {copiedQuiz ? (
                       <>
@@ -366,7 +366,7 @@ export default function FileById() {
                     onClick={handleGenerateQuiz} 
                     disabled={generatingQuiz} 
                     variant="ghost" 
-                    className="w-full rounded-full text-xs"
+                    className="w-full rounded-full cursor-pointer text-xs"
                   >
                     {generatingQuiz ? (
                       <>
@@ -405,7 +405,7 @@ export default function FileById() {
                 <Button 
                   onClick={handleGenerateQuiz}
                   disabled={generatingQuiz}
-                  className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow"
+                  className="w-full rounded-full cursor-pointer group/btn shadow-md hover:shadow-lg transition-shadow"
                 >
                   {generatingQuiz ? (
                     <>
@@ -453,7 +453,7 @@ export default function FileById() {
                 <div className="flex flex-col gap-2 pt-2">
                   <Link href={`/~/files/${id}/flashcards`} className="w-full">
                     <Button 
-                      className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow"
+                      className="w-full rounded-full cursor-pointer group/btn shadow-md hover:shadow-lg transition-shadow"
                     >
                       Start Studying
                       <ArrowRight className="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
@@ -462,7 +462,7 @@ export default function FileById() {
                   <Button 
                     onClick={handleCopyFlashcardsLink}
                     variant="outline"
-                    className="w-full rounded-full"
+                    className="w-full rounded-full cursor-pointer"
                   >
                     {copiedFlashcards ? (
                       <>
@@ -480,7 +480,7 @@ export default function FileById() {
                     onClick={handleGenerateFlashcards}
                     disabled={generatingFlashcards}
                     variant="ghost"
-                    className="w-full rounded-full text-xs"
+                    className="w-full rounded-full cursor-pointer text-xs"
                   >
                     {generatingFlashcards ? (
                       <>
@@ -519,7 +519,7 @@ export default function FileById() {
                 <Button 
                   onClick={handleGenerateFlashcards}
                   disabled={generatingFlashcards}
-                  className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow"
+                  className="w-full rounded-full cursor-pointer group/btn shadow-md hover:shadow-lg transition-shadow"
                 >
                   {generatingFlashcards ? (
                     <>

@@ -109,3 +109,46 @@ export async function createXByFileId(x: "quiz" | "flashcards", fileId: string, 
   return req;
 }
 
+export async function deleteQuizByFileId(fileId: string) {
+  const res = await authRequest(`/quizzes/${fileId}`, "DELETE");
+  console.log(res);
+  return res;
+}
+
+export async function cardsPacks() {
+  const res = await authRequest("/user_cardspacks");
+  return res;
+}
+
+export async function quizAverage() {
+  const res = await authRequest("/user_quizzes");
+  console.log(res);
+  if (res.error) return "--";
+  let sum = 0;
+  let n = 0;
+
+  for (const q of res.data) {
+    if (q.score !== -1) {
+      sum += q.score;
+      n++;
+    }
+  }
+
+  if (n !== 0) return sum/n;
+  return "--";
+}
+
+export async function updateProfile(name: string) {
+  const res = await authRequest("/update_profile", "POST", JSON.stringify({ name }));
+  return res;
+}
+
+export async function deleteAccountData() {
+  const res = await authRequest("/delete_data", "DELETE");
+  return res;
+}
+
+export async function deleteAccount() {
+  const res = await authRequest("/delete_account", "DELETE");
+  return res;
+}

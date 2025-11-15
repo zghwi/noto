@@ -18,8 +18,11 @@ import {
   Search,
   LayoutGrid,
   List,
+  Trophy,
+  Clock,
+  Minus,
 } from "lucide-react";
-import { deleteFileById, getFilesDetails } from "@/utils/api";
+import { deleteFileById, deleteQuizByFileId, getFilesDetails, getQuizByFileId } from "@/utils/api";
 import { useEffect, useState } from "react";
 import {
   Empty,
@@ -53,6 +56,7 @@ export default function Files() {
   const router = useRouter();
   const [files, setFiles] = useState<any>([]);
   const [filteredFiles, setFilteredFiles] = useState<any>([]);
+  const [quizScores, setQuizScores] = useState<{ [key: string]: number | null }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -70,6 +74,19 @@ export default function Files() {
       } else {
         setFiles(files.data);
         setFilteredFiles(files.data);
+        
+        const scores: { [key: string]: number | null } = {};
+        await Promise.all(
+          files.data.map(async (file: any) => {
+            const quiz = await getQuizByFileId(file.id);
+            if (!quiz.error && quiz.data) {
+              scores[file.id] = quiz.data.score;
+            } else {
+              scores[file.id] = null;
+            }
+          })
+        );
+        setQuizScores(scores);
         setLoading(false);
       }
     })();
@@ -104,6 +121,7 @@ export default function Files() {
   const handleDelete = async (id: string) => {
     try {
       setDeletingId(id);
+      const qd = await deleteQuizByFileId(id);
       const d = await deleteFileById(id);
       toast.success(d.data.message);
 
@@ -125,7 +143,7 @@ export default function Files() {
           <Button
             variant="destructive"
             size="icon"
-            className="rounded-full h-8 w-8 transition-all hover:scale-110"
+            className="rounded-full cursor-pointer h-8 w-8 transition-all hover:scale-110"
           >
             <Trash className="h-4 w-4" />
           </Button>
@@ -141,7 +159,7 @@ export default function Files() {
               <Button
                 onClick={() => handleDelete(file.id)}
                 variant="destructive"
-                className="flex-1"
+                className="flex-1 cursor-pointer"
               >
                 Delete File
               </Button>
@@ -149,6 +167,38 @@ export default function Files() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+    );
+  };
+
+  const QuizScoreBadge = ({ score }: { score: number | null }) => {
+    if (score === null) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
+          <Minus className="h-3 w-3 mr-1" />
+          No Quiz
+        </span>
+      );
+    }
+    
+    if (score === -1) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+          <Clock className="h-3 w-3 mr-1" />
+          Ready
+        </span>
+      );
+    }
+
+    const colorClass = 
+      score >= 90 ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20" :
+      score >= 70 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20" :
+      "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20";
+
+    return (
+      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${colorClass}`}>
+        <Trophy className="h-3 w-3 mr-1" />
+        {score}%
+      </span>
     );
   };
 
@@ -161,6 +211,9 @@ export default function Files() {
         className={`group transition-all duration-300 hover:bg-muted/50 ${
           isDeleting ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
+        style={{
+          animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`
+        }}
       >
         <TableCell className="w-12">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all group-hover:scale-105">
@@ -170,20 +223,21 @@ export default function Files() {
         <TableCell className="font-medium">
           <Link
             href={`/~/files/${file.id}`}
-            className="hover:text-primary transition-colors hover:underline flex items-center gap-2 max-w-screen"
+            className="hover:text-primary transition-colors hover:underline flex items-center gap-2"
           >
             {file.name}
           </Link>
         </TableCell>
-        <TableCell className="w-29"></TableCell>
         <TableCell className="text-muted-foreground">
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
             {file.contentType}
           </span>
         </TableCell>
-        <TableCell className="w-29"></TableCell>
         <TableCell className="text-muted-foreground text-sm">
           {dateToString(file.createdAt)}
+        </TableCell>
+        <TableCell>
+          <QuizScoreBadge score={quizScores[file.id] ?? null} />
         </TableCell>
         <TableCell className="text-right w-12">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -196,6 +250,7 @@ export default function Files() {
 
   const FileCard = ({ file }: { file: any }) => {
     const isDeleting = deletingId === file.id;
+    const score = quizScores[file.id] ?? null;
 
     return (
       <div
@@ -217,9 +272,12 @@ export default function Files() {
               <p className="font-semibold group-hover:text-primary transition-colors truncate">
                 {file.name}
               </p>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
-                {file.contentType}
-              </span>
+              <div className="flex flex-col gap-2">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary mx-auto">
+                  {file.contentType}
+                </span>
+                <QuizScoreBadge score={score} />
+              </div>
               <p className="text-xs text-muted-foreground">
                 {dateToString(file.createdAt)}
               </p>
@@ -232,6 +290,7 @@ export default function Files() {
 
   const MobileFileCard = ({ file }: { file: any }) => {
     const isDeleting = deletingId === file.id;
+    const score = quizScores[file.id] ?? null;
 
     return (
       <div
@@ -243,20 +302,21 @@ export default function Files() {
         <div className="absolute -top-2 -right-2 z-10">
           <DeleteDialog file={file} />
         </div>
-        <div className="flex items-start gap-3 max-w-[220px]">
+        <div className="flex items-start gap-3 overflow-hidden">
           <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 flex-shrink-0">
             <File className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1 min-w-0 overflow-hidden">
-            <Link href={`/~/files/${file.id}`} className="block">
-              <p className="font-semibold hover:text-primary transition-colors hover:underline truncate">
+            <Link href={`/~/files/${file.id}`} className="block overflow-hidden">
+              <p className="font-semibold hover:text-primary transition-colors hover:underline truncate overflow-hidden text-ellipsis whitespace-nowrap">
                 {file.name}
               </p>
             </Link>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex flex-wrap items-center gap-2 mt-1">
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
                 {file.contentType}
               </span>
+              <QuizScoreBadge score={score} />
             </div>
             <p className="text-xs text-muted-foreground mt-2">
               {dateToString(file.createdAt)}
@@ -294,7 +354,7 @@ export default function Files() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Breadcrumb>
+          <Breadcrumb style={{ animation: 'slideIn 0.5s ease-out' }}>
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink href="/~">~</BreadcrumbLink>
@@ -307,13 +367,16 @@ export default function Files() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="absolute right-10">
+          <div style={{ animation: 'slideIn 0.5s ease-out 0.1s both' }}>
             <NewFile />
           </div>
         </div>
 
         {!loading && files.length > 0 && (
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div 
+            className="flex flex-col sm:flex-row gap-3"
+            style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+          >
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -328,7 +391,7 @@ export default function Files() {
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="icon"
                 onClick={() => setViewMode("list")}
-                className="rounded-full"
+                className="rounded-full cursor-pointer"
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -336,7 +399,7 @@ export default function Files() {
                 variant={viewMode === "grid" ? "default" : "outline"}
                 size="icon"
                 onClick={() => setViewMode("grid")}
-                className="rounded-full"
+                className="rounded-full cursor-pointer"
               >
                 <LayoutGrid className="h-4 w-4" />
               </Button>
@@ -359,10 +422,9 @@ export default function Files() {
                     <TableRow className="hover:bg-transparent">
                       <TableHead className="w-12"></TableHead>
                       <TableHead>Name</TableHead>
-                      <TableHead className="w-29"></TableHead>
                       <TableHead>Type</TableHead>
-                      <TableHead className="w-29"></TableHead>
                       <TableHead>Created</TableHead>
+                      <TableHead>Quiz Status</TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -375,7 +437,7 @@ export default function Files() {
               </div>
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredFiles.map((file: any) => (
+                {filteredFiles.map((file: any, index: number) => (
                   <FileCard key={file.id} file={file} />
                 ))}
               </div>
@@ -383,13 +445,13 @@ export default function Files() {
           </div>
 
           <div className="md:hidden space-y-3">
-            {filteredFiles.map((file: any) => (
+            {filteredFiles.map((file: any, index: number) => (
               <MobileFileCard key={file.id} file={file} />
             ))}
           </div>
         </div>
       ) : (
-        <div className="py-12">
+        <div className="py-12" style={{ animation: 'fadeInUp 0.5s ease-out 0.4s both' }}>
           <Empty className="border rounded-xl">
             <EmptyHeader>
               <EmptyMedia variant="icon">

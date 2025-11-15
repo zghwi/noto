@@ -137,6 +137,67 @@ app.MapPost("/quizzes/{fileId:Guid}", async (Guid fileId, QuizDto body, HttpRequ
     return Results.Ok(new { message = "Quiz created successfully" });
 });
 
+app.MapPost("/update_profile", async (UpdateDto body, HttpRequest request, AppDbContext db, HttpContext http) =>
+{
+    var currentUsername = http.User.Identity?.Name;
+    if (currentUsername == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users
+        .FirstOrDefaultAsync(u => u.Username == currentUsername);
+
+    if (user == null)
+        return Results.Unauthorized();
+
+    user.Name = body.name;
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new
+    {
+        message = "Profile updated successfully",
+        user = new { user.Name }
+    });
+});
+
+app.MapDelete("/delete_account", async (AppDbContext db, HttpContext http) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    db.Users.Remove(user);
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { message = "Account deleted successfully" });
+});
+
+app.MapPost("/delete_data", async (HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var quizzes = db.Quizzes.Where(q => q.UserId == user.Id);
+    var cardspacks = db.CardsPacks.Where(c => c.UserId == user.Id);
+
+    db.Quizzes.RemoveRange(quizzes);
+    db.CardsPacks.RemoveRange(cardspacks);
+
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { message = "All quizzes and cards packs deleted successfully." });
+}).RequireAuthorization();
+
+
 app.MapPost("/cardspacks/{fileId:Guid}", async (Guid fileId, CardsPackDto body, HttpRequest request, AppDbContext db, HttpContext http) =>
 {
     var username = http.User.Identity?.Name;
@@ -164,6 +225,47 @@ app.MapPost("/cardspacks/{fileId:Guid}", async (Guid fileId, CardsPackDto body, 
     await db.SaveChangesAsync();
     return Results.Ok(new { message = "Cards pack created successfully" });
 });
+
+app.MapDelete("/quizzes/{fileId:Guid}", async (Guid fileId, AppDbContext db, HttpContext http) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var quiz = await db.Quizzes.FirstOrDefaultAsync(q => q.FileId == fileId && q.UserId == user.Id);
+    if (quiz == null)
+        return Results.NotFound(new { message = "Quiz not found" });
+
+    db.Quizzes.Remove(quiz);
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { message = "Quiz deleted successfully" });
+});
+
+app.MapDelete("/cardspacks/{fileId:Guid}", async (Guid fileId, AppDbContext db, HttpContext http) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var cardsPack = await db.CardsPacks.FirstOrDefaultAsync(cp => cp.FileId == fileId && cp.UserId == user.Id);
+    if (cardsPack == null)
+        return Results.NotFound(new { message = "Cards pack not found" });
+
+    db.CardsPacks.Remove(cardsPack);
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { message = "Cards pack deleted successfully" });
+});
+
 
 app.MapPost("/upload", async (HttpRequest request, AppDbContext db, HttpContext http) =>
 {
@@ -299,6 +401,31 @@ app.MapGet("/quizzes/{fileId:Guid}", async (Guid fileId, HttpContext http, AppDb
     });
 });
 
+app.MapGet("/user_quizzes", async (HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var quizzes = await db.Quizzes
+        .Where(q => q.UserId == user.Id)
+        .ToListAsync();
+
+    return Results.Ok(
+        quizzes.Select(q => new
+        {
+            q.Id,
+            q.Questions,
+            q.Score
+        })
+    );
+});
+
+
 app.MapGet("/cardspacks/{fileId:Guid}", async (Guid fileId, HttpContext http, AppDbContext db) =>
 {
     var username = http.User.Identity?.Name;
@@ -320,10 +447,24 @@ app.MapGet("/cardspacks/{fileId:Guid}", async (Guid fileId, HttpContext http, Ap
     });
 });
 
+app.MapGet("/user_cardspacks/", async (HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+    var cardspacks = await db.CardsPacks.Where(c => c.UserId == user.Id).ToListAsync();
+
+    return Results.Ok(cardspacks.Select(c => new { c.Id, c.Cards }));
+});
+
 
 app.Run();
 
 record SignupDto(string Name, string Username, string Password);
 record LoginDto(string Username, string Password);
+record UpdateDto(string name);
 record QuizDto(string questions);
 record CardsPackDto(string cards);
