@@ -92,8 +92,6 @@ export default function FileById() {
     setGeneratingQuiz(true);
     try {
       const res = await createXByFileId("quiz", id as string, 5);
-      console.log(res);
-      
       toast.success(res.data.message);
       
       const quiz = await getQuizByFileId(id as string);
@@ -112,7 +110,6 @@ export default function FileById() {
     setGeneratingFlashcards(true);
     try {
       const res = await createXByFileId("flashcards", id as string, 5);
-      console.log(res);
       toast.success(res.data.message);
       
       const flashcards = await getFlashcardsByFileId(id as string);

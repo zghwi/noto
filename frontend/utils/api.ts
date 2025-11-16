@@ -97,7 +97,6 @@ export async function getQuizByFileId(fileId: string) {
 
 export async function getFlashcardsByFileId(fileId: string) {
   const data = await authRequest(`/cardspacks/${fileId}`);
-  console.log(data);
   return data;
 }
 
@@ -111,7 +110,6 @@ export async function createXByFileId(x: "quiz" | "flashcards", fileId: string, 
 
 export async function deleteQuizByFileId(fileId: string) {
   const res = await authRequest(`/quizzes/${fileId}`, "DELETE");
-  console.log(res);
   return res;
 }
 
@@ -122,7 +120,6 @@ export async function cardsPacks() {
 
 export async function quizAverage() {
   const res = await authRequest("/user_quizzes");
-  console.log(res);
   if (res.error) return "--";
   let sum = 0;
   let n = 0;

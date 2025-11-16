@@ -16,12 +16,13 @@ import { toast } from "sonner";
 import { Spinner } from "./spinner";
 import { useRouter } from "next/navigation";
 
-function NewFile() {
+export function NewFile() {
   const router = useRouter();
 
   const [file, setFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fileSchema = z.object({
@@ -34,13 +35,14 @@ function NewFile() {
     const validation = fileSchema.safeParse({ file });
     if (!validation.success) {
       toast.error(validation.error.message);
+      return;
     }
     const formData = new FormData();
     formData.append("file", file!);
 
     const token = localStorage.getItem("token");
     setLoading(true);
-    const res = await fetch("http://localhost:5138/upload", {
+    const res = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -52,13 +54,43 @@ function NewFile() {
 
     if (res.ok) {
       setOpen(false);
+      setFile(null);
       toast.success("File uploaded successfully");
       router.push(`/~/files/${data.id}`);
     } else {
       const err = await res.text();
       console.log(err);
+      toast.error("Failed to upload file");
     }
   }
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const droppedFiles = e.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+      setFile(droppedFiles[0]);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -73,29 +105,53 @@ function NewFile() {
         </DialogHeader>
         <div
           onClick={() => fileInputRef.current?.click()}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
           className={cn(
-            "flex flex-col items-center justify-center w-full p-6 mt-2 mb-3 border border-dashed rounded-lg cursor-pointer",
-            "hover:border-primary/60 transition-colors bg-muted/30",
+            "flex flex-col items-center justify-center w-full p-8 mt-2 mb-3 border-2 border-dashed rounded-lg cursor-pointer transition-all",
+            "hover:border-primary/60 bg-muted/30",
+            isDragging && "border-primary bg-primary/5 scale-[1.02]"
           )}
         >
-          <Upload className="h-6 w-6 text-muted-foreground mb-2" />
-          <p className="text-sm text-muted-foreground">
+          <Upload className={cn(
+            "h-8 w-8 mb-3 transition-all",
+            isDragging ? "text-primary scale-110" : "text-muted-foreground"
+          )} />
+          <p className="text-sm text-center">
             {file ? (
-              <span className="flex items-center gap-2 text-foreground">
+              <span className="flex items-center gap-2 text-foreground font-medium">
                 <FileIcon className="h-4 w-4 text-primary" />
                 <span className="truncate max-w-[200px]">{file.name}</span>
               </span>
             ) : (
-              "Click to choose a file"
+              <span className="text-muted-foreground">
+                {isDragging ? (
+                  <span className="text-primary font-medium">Drop file here</span>
+                ) : (
+                  <>
+                    <span className="font-medium">Click to choose</span> or drag and drop
+                  </>
+                )}
+              </span>
             )}
           </p>
+          {!file && !isDragging && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Supports PDF, TXT, DOCX, and more
+            </p>
+          )}
         </div>
 
         <input
           type="file"
           ref={fileInputRef}
           className="hidden"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          onChange={(e) => {
+            const selectedFile = e.target.files?.[0] || null;
+            setFile(selectedFile);
+          }}
         />
         <Button onClick={handleUpload} disabled={loading || file == null}>
           {loading ? <Spinner /> : "Upload"}
@@ -104,5 +160,3 @@ function NewFile() {
     </Dialog>
   );
 }
-
-export { NewFile };

@@ -1,7 +1,7 @@
 "use client";
 
 import { Spinner } from "@/components/ui/spinner";
-import { getUser, getFilesDetails, quizAverage } from "@/utils/api";
+import { getUser, getFilesDetails, quizAverage, cardsPacks } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -33,11 +33,14 @@ export default function Root() {
   const [loading, setLoading] = useState<boolean>(false);
   const [timeOfDay, setTimeOfDay] = useState<string>("");
   const [quizAvg, setQuizAvg] = useState<number | "--">("--");
+  const [cardsPacksLen, setCardsPacksLen] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       const avg = await quizAverage();
+      const ncp = await cardsPacks();
       setQuizAvg(avg);
+      setCardsPacksLen(ncp.data.length);
       setLoading(true);
       const user = await getUser();
       const files = await getFilesDetails();
@@ -115,7 +118,7 @@ export default function Root() {
     {
       icon: <Layers className="h-5 w-5" />,
       label: "Card Packs Generated",
-      value: 0,
+      value: cardsPacksLen,
       color: "text-purple-500",
       bgColor: "bg-purple-500/10",
     }

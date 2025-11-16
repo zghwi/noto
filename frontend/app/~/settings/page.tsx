@@ -72,9 +72,7 @@ export default function Settings() {
   }, []);
 
   const handleSaveProfile = async () => {
-    console.log(name);
     const result = updateSchema.safeParse({ name });
-    console.log(result);
     if (!result.success) {
       const err = JSON.parse(result.error.message);
       for (let e of err) toast.error(e.message);
@@ -254,11 +252,11 @@ export default function Settings() {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Version</span>
-              <span className="text-sm font-medium">1.0.0</span>
+              <span className="text-sm font-medium">1.21.0</span>
             </div>
             <Separator />
             <div className="flex flex-col gap-2">
-              <a href="https://github.com/zghwi/noto" className="text-sm text-primary hover:underline">
+              <a href="https://github.com/zghwi/noto" target="_blank" className="text-sm text-primary hover:underline">
                 GitHub
               </a>
             </div>
