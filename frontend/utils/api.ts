@@ -95,6 +95,11 @@ export async function getQuizByFileId(fileId: string) {
   return data;
 }
 
+export async function getQuizByQuizId(quizId: string) {
+  const res = await authRequest(`/quiz/${quizId}`);
+  return res;
+}
+
 export async function getFlashcardsByFileId(fileId: string) {
   const data = await authRequest(`/cardspacks/${fileId}`);
   return data;
@@ -137,6 +142,11 @@ export async function quizAverage() {
 
 export async function updateProfile(name: string) {
   const res = await authRequest("/update_profile", "POST", JSON.stringify({ name }));
+  return res;
+}
+
+export async function updateQuizScore(quizId: string, score: number) {
+  const res = await authRequest(`/update_quiz_score/${quizId}`, "POST", JSON.stringify({ score }));
   return res;
 }
 

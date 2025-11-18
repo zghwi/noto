@@ -137,6 +137,26 @@ app.MapPost("/quizzes/{fileId:Guid}", async (Guid fileId, QuizDto body, HttpRequ
     return Results.Ok(new { message = "Quiz created successfully" });
 });
 
+app.MapPost("/update_quiz_score/{quizId:Guid}", async (Guid quizId, UpdateScoreDto body, HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var quiz = await db.Quizzes.FirstOrDefaultAsync(q => q.Id == quizId && q.UserId == user.Id);
+    if (quiz == null)
+        return Results.NotFound(new { message = "Quiz not found" });
+
+    quiz.Score = body.score;
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { message = "Quiz score updated successfully", quizId = quiz.Id, score = quiz.Score });
+}).RequireAuthorization();
+
 app.MapPost("/update_profile", async (UpdateDto body, HttpRequest request, AppDbContext db, HttpContext http) =>
 {
     var currentUsername = http.User.Identity?.Name;
@@ -401,6 +421,27 @@ app.MapGet("/quizzes/{fileId:Guid}", async (Guid fileId, HttpContext http, AppDb
     });
 });
 
+app.MapGet("/quiz/{quizId:Guid}", async (Guid quizId, HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var quiz = await db.Quizzes.FirstOrDefaultAsync(q => q.Id == quizId);
+    if (quiz == null)
+        return Results.NotFound(new { message = "Quiz not found" });
+    
+    return Results.Ok(new
+    {
+        quiz.Id,
+        quiz.Questions,
+        quiz.Score
+    });
+});
+
 app.MapGet("/user_quizzes", async (HttpContext http, AppDbContext db) =>
 {
     var username = http.User.Identity?.Name;
@@ -468,3 +509,4 @@ record LoginDto(string Username, string Password);
 record UpdateDto(string name);
 record QuizDto(string questions);
 record CardsPackDto(string cards);
+record UpdateScoreDto(int score);
