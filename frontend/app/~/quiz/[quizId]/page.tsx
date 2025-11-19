@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { getQuizByQuizId } from "@/utils/api";
+import { getQuizByQuizId, getUserById } from "@/utils/api";
 
 type Question = {
   question: string;
@@ -32,6 +32,7 @@ type Question = {
 export default function PublicQuiz() {
   const [quiz, setQuiz] = useState<{
     id: string;
+    userId: string;
     questions: string;
   } | null>();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -40,14 +41,13 @@ export default function PublicQuiz() {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
+  const [owner, setOwner] = useState<string>("");
   const { quizId } = useParams();
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
       try {
-        // Fetch quiz by ID (public endpoint - no auth required)
-        const token = localStorage.getItem("token");
         const res = await getQuizByQuizId(quizId as string);
         
         if (!res.error) {
@@ -59,6 +59,13 @@ export default function PublicQuiz() {
           setQuiz(null);
           setQuestions([]);
         }
+
+        const ures = await getUserById(res.data.userId);
+        if (!ures.error) {
+          setOwner(ures.data.name);
+        } else {
+          setOwner("?");
+        }
       } catch (error) {
         console.error(error);
         setQuiz(null);
@@ -66,6 +73,7 @@ export default function PublicQuiz() {
       setLoading(false);
     })();
   }, [quizId]);
+
 
   const handleSelectAnswer = (answerIndex: number) => {
     const newAnswers = [...selectedAnswers];
@@ -157,7 +165,6 @@ export default function PublicQuiz() {
           }
         `}</style>
 
-        {/* Score Card */}
         <Card 
           className="p-8 text-center space-y-6 relative overflow-hidden"
           style={{ animation: 'scaleIn 0.5s ease-out' }}
@@ -227,7 +234,6 @@ export default function PublicQuiz() {
           </div>
         </Card>
 
-        {/* Review Answers */}
         <div className="space-y-4">
           <h3 className="text-xl font-bold">Review Your Answers</h3>
           {questions.map((q, index) => {
@@ -310,7 +316,6 @@ export default function PublicQuiz() {
         }
       `}</style>
 
-      {/* Header */}
       <div className="space-y-4" style={{ animation: 'fadeInUp 0.5s ease-out' }}>
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
@@ -318,7 +323,7 @@ export default function PublicQuiz() {
               <Brain className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Practice Quiz</h1>
+              <h1 className="text-2xl font-bold">{owner}'s Quiz</h1>
               <p className="text-sm text-muted-foreground">
                 Question {currentQuestion + 1} of {questions.length}
               </p>
@@ -346,54 +351,77 @@ export default function PublicQuiz() {
         </div>
       </div>
 
-      {/* Question Card */}
-      <Card 
-        className="p-8 space-y-6"
+      <div 
+        className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6"
         style={{ animation: 'fadeInUp 0.5s ease-out 0.1s both' }}
       >
-        <div className="space-y-4">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
-              {currentQuestion + 1}
+        <Card className="p-8 space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
+                {currentQuestion + 1}
+              </div>
+              <h2 className="text-xl font-semibold leading-relaxed">
+                {currentQ.question}
+              </h2>
             </div>
-            <h2 className="text-xl font-semibold leading-relaxed">
-              {currentQ.question}
-            </h2>
-          </div>
 
-          <div className="space-y-3 pt-4">
-            {currentQ.options.map((option, index) => (
+            <div className="space-y-3 pt-4">
+              {currentQ.options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSelectAnswer(index)}
+                  className={cn(
+                    "w-full p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02]",
+                    selectedAnswers[currentQuestion] === index
+                      ? "border-primary bg-primary/10 shadow-md"
+                      : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
+                      selectedAnswers[currentQuestion] === index
+                        ? "border-primary bg-primary"
+                        : "border-muted-foreground"
+                    )}>
+                      {selectedAnswers[currentQuestion] === index && (
+                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      )}
+                    </div>
+                    <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
+                    <span className="flex-1">{option}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4 h-fit lg:sticky lg:top-8 lg:w-[200px]">
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">Quick Navigation</span>
+          </div>
+          <div className="grid grid-cols-5 lg:grid-cols-4 gap-2">
+            {questions.map((_, index) => (
               <button
                 key={index}
-                onClick={() => handleSelectAnswer(index)}
+                onClick={() => setCurrentQuestion(index)}
                 className={cn(
-                  "w-full p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02]",
-                  selectedAnswers[currentQuestion] === index
-                    ? "border-primary bg-primary/10 shadow-md"
-                    : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  "w-10 h-10 rounded-lg border-2 font-medium transition-all hover:scale-105",
+                  currentQuestion === index && "border-primary bg-primary text-white",
+                  currentQuestion !== index && selectedAnswers[index] !== -1 && "border-green-500 bg-green-500/10 text-green-600",
+                  currentQuestion !== index && selectedAnswers[index] === -1 && "border-border hover:border-primary/50"
                 )}
               >
-                <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
-                    selectedAnswers[currentQuestion] === index
-                      ? "border-primary bg-primary"
-                      : "border-muted-foreground"
-                  )}>
-                    {selectedAnswers[currentQuestion] === index && (
-                      <CheckCircle2 className="h-4 w-4 text-white" />
-                    )}
-                  </div>
-                  <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
-                  <span className="flex-1">{option}</span>
-                </div>
+                {index + 1}
               </button>
             ))}
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
 
-      {/* Navigation */}
       <div 
         className="flex items-center justify-between"
         style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
@@ -429,33 +457,6 @@ export default function PublicQuiz() {
           </Button>
         )}
       </div>
-
-      {/* Quick Navigation */}
-      <Card 
-        className="p-4"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.3s both' }}
-      >
-        <div className="flex items-center gap-2 mb-3">
-          <Target className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-muted-foreground">Quick Navigation</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {questions.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentQuestion(index)}
-              className={cn(
-                "w-10 h-10 rounded-lg border-2 font-medium transition-all hover:scale-105",
-                currentQuestion === index && "border-primary bg-primary text-white",
-                currentQuestion !== index && selectedAnswers[index] !== -1 && "border-green-500 bg-green-500/10 text-green-600",
-                currentQuestion !== index && selectedAnswers[index] === -1 && "border-border hover:border-primary/50"
-              )}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      </Card>
     </div>
   );
 }

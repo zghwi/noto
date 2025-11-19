@@ -91,6 +91,7 @@ export default function FileQuiz() {
     const finalScore = Math.round((correct / questions.length) * 100);
     setScore(finalScore);
     setShowResults(true);
+
     await updateQuizScore(quiz!.id, finalScore);
   };
 
@@ -336,51 +337,76 @@ export default function FileQuiz() {
         </div>
       </div>
 
-      <Card 
-        className="p-8 space-y-6"
+      <div 
+        className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6"
         style={{ animation: 'fadeInUp 0.5s ease-out 0.1s both' }}
       >
-        <div className="space-y-4">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
-              {currentQuestion + 1}
+        <Card className="p-8 space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
+                {currentQuestion + 1}
+              </div>
+              <h2 className="text-xl font-semibold leading-relaxed">
+                {currentQ.question}
+              </h2>
             </div>
-            <h2 className="text-xl font-semibold leading-relaxed">
-              {currentQ.question}
-            </h2>
-          </div>
 
-          <div className="space-y-3 pt-4">
-            {currentQ.options.map((option, index) => (
+            <div className="space-y-3 pt-4">
+              {currentQ.options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSelectAnswer(index)}
+                  className={cn(
+                    "w-full p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02]",
+                    selectedAnswers[currentQuestion] === index
+                      ? "border-primary bg-primary/10 shadow-md"
+                      : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
+                      selectedAnswers[currentQuestion] === index
+                        ? "border-primary bg-primary"
+                        : "border-muted-foreground"
+                    )}>
+                      {selectedAnswers[currentQuestion] === index && (
+                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      )}
+                    </div>
+                    <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
+                    <span className="flex-1">{option}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4 h-fit lg:sticky lg:top-8 lg:w-[200px]">
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">Quick Navigation</span>
+          </div>
+          <div className="grid grid-cols-5 lg:grid-cols-4 gap-2">
+            {questions.map((_, index) => (
               <button
                 key={index}
-                onClick={() => handleSelectAnswer(index)}
+                onClick={() => setCurrentQuestion(index)}
                 className={cn(
-                  "w-full p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02]",
-                  selectedAnswers[currentQuestion] === index
-                    ? "border-primary bg-primary/10 shadow-md"
-                    : "border-border hover:border-primary/50 hover:bg-muted/50"
+                  "w-10 h-10 rounded-lg border-2 font-medium transition-all hover:scale-105",
+                  currentQuestion === index && "border-primary bg-primary text-white",
+                  currentQuestion !== index && selectedAnswers[index] !== -1 && "border-green-500 bg-green-500/10 text-green-600",
+                  currentQuestion !== index && selectedAnswers[index] === -1 && "border-border hover:border-primary/50"
                 )}
               >
-                <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
-                    selectedAnswers[currentQuestion] === index
-                      ? "border-primary bg-primary"
-                      : "border-muted-foreground"
-                  )}>
-                    {selectedAnswers[currentQuestion] === index && (
-                      <CheckCircle2 className="h-4 w-4 text-white" />
-                    )}
-                  </div>
-                  <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
-                  <span className="flex-1">{option}</span>
-                </div>
+                {index + 1}
               </button>
             ))}
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
 
       <div 
         className="flex items-center justify-between"
@@ -416,33 +442,7 @@ export default function FileQuiz() {
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         )}
-      </div>
-
-      <Card 
-        className="p-4"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.3s both' }}
-      >
-        <div className="flex items-center gap-2 mb-3">
-          <Target className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium text-muted-foreground">Quick Navigation</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {questions.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentQuestion(index)}
-              className={cn(
-                "w-10 h-10 rounded-lg border-2 font-medium transition-all hover:scale-105",
-                currentQuestion === index && "border-primary bg-primary text-white",
-                currentQuestion !== index && selectedAnswers[index] !== -1 && "border-green-500 bg-green-500/10 text-green-600",
-                currentQuestion !== index && selectedAnswers[index] === -1 && "border-border hover:border-primary/50"
-              )}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-      </Card>
+      </div>    
     </div>
   );
 }

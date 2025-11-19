@@ -145,6 +145,11 @@ export async function updateProfile(name: string) {
   return res;
 }
 
+export async function getUserById(id: string) {
+  const res = await authRequest(`/get_user/${id}`);
+  return res;
+}
+
 export async function updateQuizScore(quizId: string, score: number) {
   const res = await authRequest(`/update_quiz_score/${quizId}`, "POST", JSON.stringify({ score }));
   return res;

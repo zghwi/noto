@@ -437,6 +437,7 @@ app.MapGet("/quiz/{quizId:Guid}", async (Guid quizId, HttpContext http, AppDbCon
     return Results.Ok(new
     {
         quiz.Id,
+        quiz.UserId,
         quiz.Questions,
         quiz.Score
     });
@@ -499,6 +500,27 @@ app.MapGet("/user_cardspacks/", async (HttpContext http, AppDbContext db) =>
     var cardspacks = await db.CardsPacks.Where(c => c.UserId == user.Id).ToListAsync();
 
     return Results.Ok(cardspacks.Select(c => new { c.Id, c.Cards }));
+});
+
+app.MapGet("/get_user/{id:Guid}", async (Guid id, HttpContext http, AppDbContext db) =>
+{
+    var username = http.User.Identity?.Name;
+    if (username == null)
+        return Results.Unauthorized();
+    var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+    if (user == null)
+        return Results.Unauthorized();
+
+    var uuser = await db.Users.FirstOrDefaultAsync(u => u.Id == id);
+    if (uuser == null)
+        return Results.NotFound(new { message = "User not found" });
+    
+    return Results.Ok(new
+    {
+        uuser.Id,
+        uuser.Name,
+        uuser.Username
+    });
 });
 
 
