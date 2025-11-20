@@ -15,6 +15,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
 import { useRouter } from "next/navigation";
+import { uploadFile } from "@/utils/api";
 
 export function NewFile() {
   const router = useRouter();
@@ -39,27 +40,19 @@ export function NewFile() {
     }
     const formData = new FormData();
     formData.append("file", file!);
-
-    const token = localStorage.getItem("token");
+    
     setLoading(true);
-    const res = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/upload`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-    const data = await res.json();
+    const res = await uploadFile(formData);
+    const data = res.data;
     setLoading(false);
 
-    if (res.ok) {
+    if (!res.error) {
       setOpen(false);
       setFile(null);
       toast.success("File uploaded successfully");
       router.push(`/~/files/${data.id}`);
     } else {
-      const err = await res.text();
-      console.log(err);
+      console.log(res.data);
       toast.error("Failed to upload file");
     }
   }

@@ -24,12 +24,13 @@ function errorType(code: number): string {
 async function authRequest(
   url: string,
   type?: "POST" | "DELETE" | "PUT" | "GET",
-  body?: string
+  body?: string | FormData
 ) {
   const token = localStorage.getItem("token");
   const res = await fetch(process.env["NEXT_PUBLIC_API_URL"] + url, {
     method: type || "GET",
-    headers: type === "POST" ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json"} : { Authorization: `Bearer ${token}` },
+    headers: type === "POST" ? 
+      (typeof body === "string" ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : { Authorization: `Bearer ${token}` }) : { Authorization: `Bearer ${token}` },
     body: body
   });
   if (!res.ok) return { error: true, type: errorType(res.status) };
@@ -111,6 +112,11 @@ export async function createXByFileId(x: "quiz" | "flashcards", fileId: string, 
   const questions = await ai.generate(x, q);
   const req = await authRequest(`/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`, "POST", x === "quiz" ? JSON.stringify({ questions }) : JSON.stringify({ cards: questions }));
   return req;
+}
+
+export async function uploadFile(formData: FormData) {
+  const res = await authRequest("/upload", "POST", formData);
+  return res;
 }
 
 export async function deleteQuizByFileId(fileId: string) {
