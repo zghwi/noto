@@ -121,7 +121,7 @@ export default function Files() {
   const handleDelete = async (id: string) => {
     try {
       setDeletingId(id);
-      const qd = await deleteQuizByFileId(id);
+      await deleteQuizByFileId(id);
       const d = await deleteFileById(id);
       toast.success(d.data.message);
 

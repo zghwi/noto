@@ -1,6 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import { getUser, getFilesDetails, quizAverage, cardsPacks } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

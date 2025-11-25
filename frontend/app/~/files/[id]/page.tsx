@@ -14,7 +14,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { getFileById, getQuizByFileId, getFlashcardsByFileId, createXByFileId } from "@/utils/api";
 import { 
@@ -159,12 +158,6 @@ export default function FileById() {
       minute: "2-digit",
       hour12: true,
     }).format(date);
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-500";
-    if (score >= 70) return "text-orange-500";
-    return "text-red-500";
   };
 
   if (loading) {

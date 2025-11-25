@@ -18,15 +18,9 @@ frontend/.env.test.local
 frontend/.env.production.local
 frontend/utils/test.ts
 frontend/utils/*.txt
-
-ai/.env
-ai/.env.local
-ai/package-lock.json
-ai/node_modules/
-ai/*.pdf
-ai/*.txt
-ai/*.docx
-ai/test.ts
+frontend/utils/*.pdf
+frontend/utils/*.jpg
+frontend/utils/*.png
 
 notes.md
 

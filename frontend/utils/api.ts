@@ -30,7 +30,10 @@ async function authRequest(
   const res = await fetch(process.env["NEXT_PUBLIC_API_URL"] + url, {
     method: type || "GET",
     headers: type === "POST" ? 
-      (typeof body === "string" ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } : { Authorization: `Bearer ${token}` }) : { Authorization: `Bearer ${token}` },
+      (typeof body === "string" ? 
+        { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+        : { Authorization: `Bearer ${token}` }) 
+    : { Authorization: `Bearer ${token}` },
     body: body
   });
   if (!res.ok) return { error: true, type: errorType(res.status) };
