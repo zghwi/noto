@@ -252,7 +252,7 @@ export default function Settings() {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Version</span>
-              <span className="text-sm font-medium">1.26.0</span>
+              <span className="text-sm font-medium">1.27.0</span>
             </div>
             <Separator />
             <div className="flex flex-col gap-2">

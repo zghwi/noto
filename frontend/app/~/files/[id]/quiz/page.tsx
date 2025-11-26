@@ -1,6 +1,6 @@
 "use client";
 
-import { getQuizByFileId, updateQuizScore } from "@/utils/api";
+import { getFileByIdDetails, getQuizByFileId, updateQuizScore } from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,11 @@ import {
   Trophy,
   Clock,
   Target,
-  Home
+  Home,
+  Slash
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 type Question = {
   question: string;
@@ -34,6 +36,7 @@ export default function FileQuiz() {
     score: number;
     questions: string;
   } | null>();
+  const [fileDetails, setFileDetails] = useState<any>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
@@ -45,6 +48,8 @@ export default function FileQuiz() {
 
   useEffect(() => {
     (async () => {
+      const f = await getFileByIdDetails(id as string);
+      if (!f.error) setFileDetails(f.data);
       const res = await getQuizByFileId(id as string);
       if (!res.error) {
         const q = JSON.parse(res.data.questions);
@@ -166,6 +171,32 @@ export default function FileQuiz() {
             to { transform: scale(1); opacity: 1; }
           }
         `}</style>
+
+        <Breadcrumb style={{ animation: 'fadeInUp 0.5s ease-out' }}>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/~">~</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Quiz</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
         <Card 
           className="p-8 text-center space-y-6 relative overflow-hidden"
@@ -306,6 +337,32 @@ export default function FileQuiz() {
           }
         }
       `}</style>
+
+      <Breadcrumb style={{ animation: 'fadeInUp 0.5s ease-out' }}>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/~">~</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Quiz</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
       <div className="space-y-4" style={{ animation: 'fadeInUp 0.5s ease-out' }}>
         <div className="flex items-center justify-between">

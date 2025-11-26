@@ -113,6 +113,8 @@ export async function createXByFileId(x: "quiz" | "flashcards", fileId: string, 
   const file = await getFileById(fileId);
   const ai = new AI(file.data.data, file.data.contentType);
   const questions = await ai.generate(x, q);
+  const p = JSON.parse(questions);
+  if ('error' in p) return { error: true, type: p.error };
   const req = await authRequest(`/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`, "POST", x === "quiz" ? JSON.stringify({ questions }) : JSON.stringify({ cards: questions }));
   return req;
 }
@@ -145,7 +147,7 @@ export async function quizAverage() {
     }
   }
 
-  if (n !== 0) return sum/n;
+  if (n !== 0) return Number((sum/n).toFixed(2));
   return "--";
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { getFlashcardsByFileId } from "@/utils/api";
+import { getFileByIdDetails, getFlashcardsByFileId } from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,7 @@ export default function FileFlashcards() {
     flashcards: string;
   } | null>();
   const [flashcards, setFlashcards] = useState<FlashcardType[]>([]);
+  const [fileDetails, setFileDetails] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
   const [currentCard, setCurrentCard] = useState<number>(0);
   const [masteredCards, setMasteredCards] = useState<Set<number>>(new Set());
@@ -51,6 +52,8 @@ export default function FileFlashcards() {
 
   useEffect(() => {
     (async () => {
+      const f = await getFileByIdDetails(id as string);
+      if (!f.error) setFileDetails(f.data);
       const res = await getFlashcardsByFileId(id as string);
       if (!res.error) {
         const cards = JSON.parse(res.data.cards);
@@ -149,7 +152,7 @@ export default function FileFlashcards() {
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/~/files/${id}`}>File</BreadcrumbLink>
+              <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
@@ -286,7 +289,7 @@ export default function FileFlashcards() {
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/~/files/${id}`}>File</BreadcrumbLink>
+            <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />

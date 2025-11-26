@@ -99,7 +99,9 @@ export default function FileById() {
       const eres = await getQuizByFileId(id as string);
       const amount = !eres.error ? JSON.parse(eres.data.questions).length : quizAmount;
       const res = await createXByFileId("quiz", id as string, amount);
-      toast.success(res.data.message);
+      if (res.error) toast.error(res.type);
+      //@ts-ignore
+      else toast.success(res.data.message);
 
 
       const quiz = await getQuizByFileId(id as string);
@@ -118,7 +120,9 @@ export default function FileById() {
     setGeneratingFlashcards(true);
     try {
       const res = await createXByFileId("flashcards", id as string, flashcardsAmount);
-      toast.success(res.data.message);
+      if (res.error) toast.error(res.type);
+      //@ts-ignore
+      else toast.success(res.data.message);
       
       const flashcards = await getFlashcardsByFileId(id as string);
       if (!flashcards.error && flashcards.data) {
@@ -313,7 +317,6 @@ export default function FileById() {
                         <Trophy className="h-4 w-4 mr-1.5" />
                         {existingQuiz.score}%
                       </span>
-                      <span className="text-xs text-muted-foreground font-medium">Your Score</span>
                     </div>
                   )}
                 </div>
