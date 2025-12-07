@@ -5,6 +5,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { useEffect, useState } from "react";
 
+import { Analytics } from "@vercel/analytics/next"
+
 const inter = Inter({ subsets: ["latin"], weight: ["500"] });
 
 export default function RootLayout({
@@ -48,6 +50,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${theme === "dark" ? "dark" : ""} ${inter.className}`}>
         <main>{children}</main>
+        <Analytics />
         <Toaster />
       </body>
     </html>
