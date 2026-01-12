@@ -16,6 +16,20 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+type Mixed = {
+  id?: string;
+  Id?: string;
+
+  name?: string;
+  Name?: string;
+
+  createdAt?: string;
+  CreatedAt?: string;
+
+  contentType?: string;
+  ContentType?: string;
+};
+
 export default function Root() {
   const router = useRouter();
   const [user, setUser] = useState<{
@@ -23,12 +37,7 @@ export default function Root() {
     name: string;
     username: string;
   }>();
-  const [files, setFiles] = useState<{
-    id: string,
-    name: string,
-    createdAt: string,
-    contentType: string
-  }[]>();
+  const [files, setFiles] = useState<Mixed[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [timeOfDay, setTimeOfDay] = useState<string>("");
   const [quizAvg, setQuizAvg] = useState<number | "--">("--");
@@ -253,8 +262,8 @@ export default function Root() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {files?.slice(0, 4).map((file, index) => (
               <Link 
-                key={file.id}
-                href={`/~/files/${file.id}`}
+                key={file.id ?? file.Id}
+                href={`/~/files/${file.id ?? file.Id}`}
                 className="group relative p-4 border rounded-xl bg-card hover:shadow-md hover:border-primary/50 transition-all duration-300"
                 style={{
                   animation: `fadeInUp 0.5s ease-out ${index * 0.1 + 0.6}s both`
@@ -266,10 +275,10 @@ export default function Root() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold group-hover:text-primary transition-colors truncate mb-1">
-                      {file.name}
+                      {file.name ?? file.Name}
                     </p>
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                      {timeAgo(file.createdAt)}
+                      {timeAgo((file.createdAt ?? file.CreatedAt) as string)}
                     </span>
                   </div>
                 </div>

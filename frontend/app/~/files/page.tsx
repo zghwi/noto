@@ -52,9 +52,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
+type Mixed = {
+  id?: string;
+  Id?: string;
+
+  name?: string;
+  Name?: string;
+
+  createdAt?: string;
+  CreatedAt?: string;
+
+  contentType?: string;
+  ContentType?: string;
+};
+
 export default function Files() {
   const router = useRouter();
-  const [files, setFiles] = useState<any>([]);
+  const [files, setFiles] = useState<Mixed[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<any>([]);
   const [quizScores, setQuizScores] = useState<{ [key: string]: number | null }>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -122,6 +136,7 @@ export default function Files() {
     try {
       setDeletingId(id);
       await deleteQuizByFileId(id);
+      // TODO: delete flashcards by ID
       const d = await deleteFileById(id);
       toast.success(d.data.message);
 
@@ -150,14 +165,14 @@ export default function Files() {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete "{file.name}"?</DialogTitle>
+            <DialogTitle>Delete "{file.name ?? file.Name}"?</DialogTitle>
             <DialogDescription>
               This action can't be undone. This will permanently delete your
               file.
             </DialogDescription>
             <div className="flex gap-3 pt-4">
               <Button
-                onClick={() => handleDelete(file.id)}
+                onClick={() => handleDelete(file.id ?? file.Id)}
                 variant="destructive"
                 className="flex-1 cursor-pointer"
               >
@@ -222,22 +237,22 @@ export default function Files() {
         </TableCell>
         <TableCell className="font-medium">
           <Link
-            href={`/~/files/${file.id}`}
+            href={`/~/files/${file.id ?? file.Id}`}
             className="hover:text-primary transition-colors hover:underline flex items-center gap-2"
           >
-            {file.name}
+            {file.name ?? file.Name}
           </Link>
         </TableCell>
         <TableCell className="text-muted-foreground">
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary">
-            {file.contentType}
+            {file.contentType ?? file.ContentType}
           </span>
         </TableCell>
         <TableCell className="text-muted-foreground text-sm">
-          {dateToString(file.createdAt)}
+          {dateToString(file.createdAt ?? file.CreatedAt)}
         </TableCell>
         <TableCell>
-          <QuizScoreBadge score={quizScores[file.id] ?? null} />
+          <QuizScoreBadge score={quizScores[file.id ?? file.Id] ?? null} />
         </TableCell>
         <TableCell className="text-right w-12">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -249,8 +264,8 @@ export default function Files() {
   };
 
   const FileCard = ({ file }: { file: any }) => {
-    const isDeleting = deletingId === file.id;
-    const score = quizScores[file.id] ?? null;
+    const isDeleting = deletingId === (file.id ?? file.Id);
+    const score = quizScores[file.id ?? file.Id] ?? null;
 
     return (
       <div
@@ -263,23 +278,23 @@ export default function Files() {
           <DeleteDialog file={file} />
         </div>
 
-        <Link href={`/~/files/${file.id}`} className="block">
+        <Link href={`/~/files/${file.id ?? file.Id}`} className="block">
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
               <File className="h-8 w-8 text-primary" />
             </div>
             <div className="space-y-2 w-full">
               <p className="font-semibold group-hover:text-primary transition-colors truncate">
-                {file.name}
+                {file.name ?? file.Name}
               </p>
               <div className="flex flex-col gap-2">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary mx-auto">
-                  {file.contentType}
+                  {file.contentType ?? file.ContentType}
                 </span>
                 <QuizScoreBadge score={score} />
               </div>
               <p className="text-xs text-muted-foreground">
-                {dateToString(file.createdAt)}
+                {dateToString(file.createdAt ?? file.CreatedAt)}
               </p>
             </div>
           </div>
@@ -288,9 +303,9 @@ export default function Files() {
     );
   };
 
-  const MobileFileCard = ({ file }: { file: any }) => {
-    const isDeleting = deletingId === file.id;
-    const score = quizScores[file.id] ?? null;
+  const MobileFileCard = ({ file }: { file: Mixed }) => {
+    const isDeleting = deletingId === (file.id ?? file.Id);
+    const score = quizScores[(file.id ?? file.Id) as string] ?? null;
 
     return (
       <div
@@ -307,19 +322,19 @@ export default function Files() {
             <File className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1 min-w-0 overflow-hidden">
-            <Link href={`/~/files/${file.id}`} className="block overflow-hidden">
+            <Link href={`/~/files/${file.id ?? file.Id}`} className="block overflow-hidden">
               <p className="font-semibold hover:text-primary transition-colors hover:underline truncate overflow-hidden text-ellipsis whitespace-nowrap">
-                {file.name}
+                {file.name ?? file.Name}
               </p>
             </Link>
             <div className="flex flex-wrap items-center gap-2 mt-1">
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                {file.contentType}
+                {file.contentType ?? file.ContentType}
               </span>
               <QuizScoreBadge score={score} />
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              {dateToString(file.createdAt)}
+              {dateToString((file.createdAt ?? file.CreatedAt) as string)}
             </p>
           </div>
         </div>
@@ -430,7 +445,7 @@ export default function Files() {
                   </TableHeader>
                   <TableBody>
                     {filteredFiles.map((file: any, index: number) => (
-                      <FileRow key={file.id} file={file} index={index} />
+                      <FileRow key={file.id ?? file.Id} file={file} index={index} />
                     ))}
                   </TableBody>
                 </Table>
@@ -438,7 +453,7 @@ export default function Files() {
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {filteredFiles.map((file: any, index: number) => (
-                  <FileCard key={file.id} file={file} />
+                  <FileCard key={file.id ?? file.Id} file={file} />
                 ))}
               </div>
             )}
@@ -446,7 +461,7 @@ export default function Files() {
 
           <div className="md:hidden space-y-3">
             {filteredFiles.map((file: any, index: number) => (
-              <MobileFileCard key={file.id} file={file} />
+              <MobileFileCard key={file.id ?? file.Id} file={file} />
             ))}
           </div>
         </div>
