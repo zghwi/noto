@@ -24,17 +24,21 @@ function errorType(code: number): string {
 async function authRequest(
   url: string,
   type?: "POST" | "DELETE" | "PUT" | "GET",
-  body?: string | FormData
+  body?: string | FormData,
 ) {
   const token = localStorage.getItem("token");
   const res = await fetch(process.env["NEXT_PUBLIC_API_URL"] + url, {
     method: type || "GET",
-    headers: type === "POST" ? 
-      (typeof body === "string" ? 
-        { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
-        : { Authorization: `Bearer ${token}` }) 
-    : { Authorization: `Bearer ${token}` },
-    body: body
+    headers:
+      type === "POST"
+        ? typeof body === "string"
+          ? {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            }
+          : { Authorization: `Bearer ${token}` }
+        : { Authorization: `Bearer ${token}` },
+    body: body,
   });
   if (!res.ok) return { error: true, type: errorType(res.status) };
   const data = await res.json();
@@ -84,10 +88,9 @@ export async function getFileByIdDetails(id: string) {
 
   return {
     ...result,
-    data: restData
+    data: restData,
   };
 }
-
 
 export async function deleteFileById(id: string) {
   const req = await authRequest(`/files/${id}`, "DELETE");
@@ -109,13 +112,23 @@ export async function getFlashcardsByFileId(fileId: string) {
   return data;
 }
 
-export async function createXByFileId(x: "quiz" | "flashcards", fileId: string, q: number) {
+export async function createXByFileId(
+  x: "quiz" | "flashcards",
+  fileId: string,
+  q: number,
+) {
   const file = await getFileById(fileId);
   const ai = new AI(file.data.data, file.data.contentType);
   const questions = await ai.generate(x, q);
   const p = JSON.parse(questions);
-  if ('error' in p) return { error: true, type: p.error };
-  const req = await authRequest(`/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`, "POST", x === "quiz" ? JSON.stringify({ questions }) : JSON.stringify({ cards: questions }));
+  if ("error" in p) return { error: true, type: p.error };
+  const req = await authRequest(
+    `/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`,
+    "POST",
+    x === "quiz"
+      ? JSON.stringify({ questions })
+      : JSON.stringify({ cards: questions }),
+  );
   return req;
 }
 
@@ -147,12 +160,16 @@ export async function quizAverage() {
     }
   }
 
-  if (n !== 0) return Number((sum/n).toFixed(2));
+  if (n !== 0) return Number((sum / n).toFixed(2));
   return "--";
 }
 
 export async function updateProfile(name: string) {
-  const res = await authRequest("/update_profile", "POST", JSON.stringify({ name }));
+  const res = await authRequest(
+    "/update_profile",
+    "POST",
+    JSON.stringify({ name }),
+  );
   return res;
 }
 
@@ -162,7 +179,11 @@ export async function getUserById(id: string) {
 }
 
 export async function updateQuizScore(quizId: string, score: number) {
-  const res = await authRequest(`/update_quiz_score/${quizId}`, "POST", JSON.stringify({ score }));
+  const res = await authRequest(
+    `/update_quiz_score/${quizId}`,
+    "POST",
+    JSON.stringify({ score }),
+  );
   return res;
 }
 

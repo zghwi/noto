@@ -16,7 +16,7 @@ import {
   CheckCircle2,
   XCircle,
   Trophy,
-  Target
+  Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -126,96 +126,147 @@ export default function FileFlashcards() {
   }
 
   if (showSummary) {
-    const masteredPercentage = Math.round((masteredCount / flashcards.length) * 100);
+    const masteredPercentage = Math.round(
+      (masteredCount / flashcards.length) * 100,
+    );
 
     return (
       <div className="max-w-4xl mx-auto py-12 space-y-6">
         <style jsx global>{`
           @keyframes scaleIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from {
+              transform: scale(0.8);
+              opacity: 0;
+            }
+            to {
+              transform: scale(1);
+              opacity: 1;
+            }
           }
         `}</style>
 
-        <Breadcrumb style={{ animation: 'scaleIn 0.5s ease-out' }}>
+        <Breadcrumb
+          style={{ animation: "fadeInUp 0.5s ease-out" }}
+          className="backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
+        >
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/~">~</BreadcrumbLink>
+              <BreadcrumbLink
+                href="/~"
+                className="hover:text-primary transition-colors font-medium"
+              >
+                ~
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
-              <Slash />
+              <Slash className="text-muted-foreground/50" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
+              <BreadcrumbLink
+                href="/~/files"
+                className="hover:text-primary transition-colors font-medium"
+              >
+                Your Files
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
-              <Slash />
+              <Slash className="text-muted-foreground/50" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
+              <BreadcrumbLink
+                href={`/~/files/${id}`}
+                className="hover:text-primary transition-colors font-medium"
+              >
+                {fileDetails.name}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
-              <Slash />
+              <Slash className="text-muted-foreground/50" />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage>Flashcards</BreadcrumbPage>
+              <BreadcrumbPage className="text-foreground font-medium">
+                Flashcards
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Card 
+        <Card
           className="p-8 text-center space-y-6 relative overflow-hidden"
-          style={{ animation: 'scaleIn 0.5s ease-out 0.1s both' }}
+          style={{ animation: "scaleIn 0.5s ease-out 0.1s both" }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10"></div>
-          
+
           <div className="relative z-10">
             <div className="flex justify-center mb-4">
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
                 <Trophy className="h-12 w-12 text-white" />
               </div>
             </div>
-            
+
             <h2 className="text-3xl font-bold mb-2">Study Session Complete!</h2>
             <p className="text-muted-foreground mb-6">Here's your progress</p>
-            
-            <div className="text-7xl font-bold mb-6" style={{
-              background: `linear-gradient(135deg, ${
-                masteredPercentage >= 80 ? '#10b981' : masteredPercentage >= 50 ? '#f59e0b' : '#ef4444'
-              }, ${
-                masteredPercentage >= 80 ? '#059669' : masteredPercentage >= 50 ? '#d97706' : '#dc2626'
-              })`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
+
+            <div
+              className="text-7xl font-bold mb-6"
+              style={{
+                background: `linear-gradient(135deg, ${
+                  masteredPercentage >= 80
+                    ? "#10b981"
+                    : masteredPercentage >= 50
+                      ? "#f59e0b"
+                      : "#ef4444"
+                }, ${
+                  masteredPercentage >= 80
+                    ? "#059669"
+                    : masteredPercentage >= 50
+                      ? "#d97706"
+                      : "#dc2626"
+                })`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               {masteredPercentage}%
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mb-6">
               <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
                 <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">{masteredCount}</div>
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  {masteredCount}
+                </div>
                 <div className="text-sm text-muted-foreground">Mastered</div>
               </div>
               <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/20">
                 <RotateCcw className="h-6 w-6 text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{needsPracticeCount}</div>
-                <div className="text-sm text-muted-foreground">Needs Practice</div>
+                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {needsPracticeCount}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Needs Practice
+                </div>
               </div>
             </div>
 
             <p className="text-lg font-medium mb-6">
-              {masteredPercentage >= 80 ? "🎉 Excellent! You've mastered most of these cards!" :
-               masteredPercentage >= 50 ? "👏 Good progress! Keep reviewing to master them all!" :
-               "💪 Keep practicing! You'll get there!"}
+              {masteredPercentage >= 80
+                ? "🎉 Excellent! You've mastered most of these cards!"
+                : masteredPercentage >= 50
+                  ? "👏 Good progress! Keep reviewing to master them all!"
+                  : "💪 Keep practicing! You'll get there!"}
             </p>
-            
+
             <div className="flex gap-3 justify-center flex-wrap">
               <Button onClick={handleReset} size="lg" variant="outline">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Study Again
               </Button>
-              <Button onClick={() => router.push(`/~/files/${id}`)} size="lg" variant="outline">
+              <Button
+                onClick={() => router.push(`/~/files/${id}`)}
+                size="lg"
+                variant="outline"
+              >
                 Back to File
               </Button>
               <Button onClick={() => router.push("/~/files")} size="lg">
@@ -229,16 +280,22 @@ export default function FileFlashcards() {
           <h3 className="text-xl font-bold">Your Cards</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {flashcards.map((card, index) => (
-              <Card 
+              <Card
                 key={index}
                 className={cn(
                   "p-4 space-y-2",
-                  masteredCards.has(index) ? "border-green-500/50 bg-green-500/5" : "border-orange-500/50 bg-orange-500/5"
+                  masteredCards.has(index)
+                    ? "border-green-500/50 bg-green-500/5"
+                    : "border-orange-500/50 bg-orange-500/5",
                 )}
-                style={{ animation: `scaleIn 0.5s ease-out ${index * 0.05}s both` }}
+                style={{
+                  animation: `scaleIn 0.5s ease-out ${index * 0.05}s both`,
+                }}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-muted-foreground">Card {index + 1}</span>
+                  <span className="text-sm font-semibold text-muted-foreground">
+                    Card {index + 1}
+                  </span>
                   {masteredCards.has(index) ? (
                     <CheckCircle2 className="h-5 w-5 text-green-500" />
                   ) : (
@@ -274,7 +331,7 @@ export default function FileFlashcards() {
         }
       `}</style>
 
-      <Breadcrumb style={{ animation: 'fadeInUp 0.5s ease-out' }}>
+      <Breadcrumb style={{ animation: "fadeInUp 0.5s ease-out" }}>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/~">~</BreadcrumbLink>
@@ -289,7 +346,9 @@ export default function FileFlashcards() {
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
+            <BreadcrumbLink href={`/~/files/${id}`}>
+              {fileDetails.name}
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
@@ -300,7 +359,10 @@ export default function FileFlashcards() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="space-y-4" style={{ animation: 'fadeInUp 0.5s ease-out 0.1s both' }}>
+      <div
+        className="space-y-4"
+        style={{ animation: "fadeInUp 0.5s ease-out 0.1s both" }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -314,7 +376,7 @@ export default function FileFlashcards() {
             </div>
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <Progress value={progress} className="h-2" />
           <div className="flex justify-between text-xs text-muted-foreground">
@@ -324,12 +386,12 @@ export default function FileFlashcards() {
         </div>
       </div>
 
-      <div 
+      <div
         className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+        style={{ animation: "fadeInUp 0.5s ease-out 0.2s both" }}
       >
         <div className="min-h-[400px] md:min-h-[500px]">
-          <Flashcard 
+          <Flashcard
             front={currentFlashcard.front}
             back={currentFlashcard.back}
             className="h-full"
@@ -339,7 +401,9 @@ export default function FileFlashcards() {
         <Card className="p-4 h-fit lg:sticky lg:top-8 lg:w-[200px]">
           <div className="flex items-center gap-2 mb-3">
             <Target className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">Progress</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Progress
+            </span>
           </div>
           <div className="grid grid-cols-5 lg:grid-cols-4 gap-2">
             {flashcards.map((_, index) => (
@@ -348,9 +412,14 @@ export default function FileFlashcards() {
                 onClick={() => setCurrentCard(index)}
                 className={cn(
                   "w-10 h-10 rounded-lg border-2 font-medium transition-all hover:scale-105",
-                  currentCard === index && "border-primary bg-primary text-white",
-                  currentCard !== index && masteredCards.has(index) && "border-green-500 bg-green-500/10 text-green-600",
-                  currentCard !== index && !masteredCards.has(index) && "border-border hover:border-primary/50"
+                  currentCard === index &&
+                    "border-primary bg-primary text-white",
+                  currentCard !== index &&
+                    masteredCards.has(index) &&
+                    "border-green-500 bg-green-500/10 text-green-600",
+                  currentCard !== index &&
+                    !masteredCards.has(index) &&
+                    "border-border hover:border-primary/50",
                 )}
               >
                 {index + 1}
@@ -360,9 +429,9 @@ export default function FileFlashcards() {
         </Card>
       </div>
 
-      <div 
+      <div
         className="flex flex-col sm:flex-row gap-3 justify-center"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.3s both' }}
+        style={{ animation: "fadeInUp 0.5s ease-out 0.3s both" }}
       >
         <Button
           onClick={handleNeedsPractice}
@@ -383,9 +452,9 @@ export default function FileFlashcards() {
         </Button>
       </div>
 
-      <div 
+      <div
         className="flex items-center justify-between"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.4s both' }}
+        style={{ animation: "fadeInUp 0.5s ease-out 0.4s both" }}
       >
         <Button
           onClick={handlePrevious}
@@ -397,10 +466,7 @@ export default function FileFlashcards() {
           Previous
         </Button>
 
-        <Button
-          onClick={handleNext}
-          size="lg"
-        >
+        <Button onClick={handleNext} size="lg">
           {currentCard === flashcards.length - 1 ? "Finish" : "Next Card"}
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>

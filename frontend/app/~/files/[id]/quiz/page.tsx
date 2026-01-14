@@ -1,6 +1,10 @@
 "use client";
 
-import { getFileByIdDetails, getQuizByFileId, updateQuizScore } from "@/utils/api";
+import {
+  getFileByIdDetails,
+  getQuizByFileId,
+  updateQuizScore,
+} from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -16,10 +20,17 @@ import {
   Clock,
   Target,
   Home,
-  Slash
+  Slash,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 type Question = {
   question: string;
@@ -138,10 +149,15 @@ export default function FileQuiz() {
             <p className="text-muted-foreground mb-4">
               You've already taken this quiz and scored
             </p>
-            <div className="text-5xl font-bold text-primary mb-2">{quiz.score}%</div>
+            <div className="text-5xl font-bold text-primary mb-2">
+              {quiz.score}%
+            </div>
           </div>
           <div className="flex gap-3 justify-center">
-            <Button onClick={() => router.push(`/~/files/${id}`)} variant="outline">
+            <Button
+              onClick={() => router.push(`/~/files/${id}`)}
+              variant="outline"
+            >
               Back to File
             </Button>
             <Button onClick={() => router.push("/~/files")}>
@@ -155,7 +171,7 @@ export default function FileQuiz() {
 
   if (showResults) {
     const correctCount = selectedAnswers.filter(
-      (ans, idx) => ans === questions[idx].answer_idx
+      (ans, idx) => ans === questions[idx].answer_idx,
     ).length;
     const incorrectCount = questions.length - correctCount;
 
@@ -163,16 +179,28 @@ export default function FileQuiz() {
       <div className="max-w-4xl mx-auto py-12 space-y-6">
         <style jsx global>{`
           @keyframes confetti {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+            0% {
+              transform: translateY(0) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100vh) rotate(360deg);
+              opacity: 0;
+            }
           }
           @keyframes scaleIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from {
+              transform: scale(0.8);
+              opacity: 0;
+            }
+            to {
+              transform: scale(1);
+              opacity: 1;
+            }
           }
         `}</style>
 
-        <Breadcrumb style={{ animation: 'fadeInUp 0.5s ease-out' }}>
+        <Breadcrumb style={{ animation: "fadeInUp 0.5s ease-out" }}>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/~">~</BreadcrumbLink>
@@ -187,7 +215,9 @@ export default function FileQuiz() {
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
+              <BreadcrumbLink href={`/~/files/${id}`}>
+                {fileDetails.name}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
@@ -198,55 +228,67 @@ export default function FileQuiz() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Card 
+        <Card
           className="p-8 text-center space-y-6 relative overflow-hidden"
-          style={{ animation: 'scaleIn 0.5s ease-out' }}
+          style={{ animation: "scaleIn 0.5s ease-out" }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10"></div>
-          
+
           <div className="relative z-10">
             <div className="flex justify-center mb-4">
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
                 <Trophy className="h-12 w-12 text-white" />
               </div>
             </div>
-            
+
             <h2 className="text-3xl font-bold mb-2">Quiz Complete!</h2>
             <p className="text-muted-foreground mb-6">Here's how you did</p>
-            
-            <div className="text-7xl font-bold mb-6" style={{
-              background: `linear-gradient(135deg, ${
-                score >= 90 ? '#10b981' : score >= 70 ? '#f59e0b' : '#ef4444'
-              }, ${
-                score >= 90 ? '#059669' : score >= 70 ? '#d97706' : '#dc2626'
-              })`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
+
+            <div
+              className="text-7xl font-bold mb-6"
+              style={{
+                background: `linear-gradient(135deg, ${
+                  score >= 90 ? "#10b981" : score >= 70 ? "#f59e0b" : "#ef4444"
+                }, ${
+                  score >= 90 ? "#059669" : score >= 70 ? "#d97706" : "#dc2626"
+                })`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               {score}%
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mb-6">
               <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
                 <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">{correctCount}</div>
+                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  {correctCount}
+                </div>
                 <div className="text-sm text-muted-foreground">Correct</div>
               </div>
               <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20">
                 <XCircle className="h-6 w-6 text-red-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-red-600 dark:text-red-400">{incorrectCount}</div>
+                <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                  {incorrectCount}
+                </div>
                 <div className="text-sm text-muted-foreground">Incorrect</div>
               </div>
             </div>
 
             <p className="text-lg font-medium mb-6">
-              {score >= 90 ? "🎉 Excellent work! You've mastered this material!" :
-               score >= 70 ? "👏 Good job! Keep practicing to improve!" :
-               "💪 Keep studying! You'll get better with practice!"}
+              {score >= 90
+                ? "🎉 Excellent work! You've mastered this material!"
+                : score >= 70
+                  ? "👏 Good job! Keep practicing to improve!"
+                  : "💪 Keep studying! You'll get better with practice!"}
             </p>
-            
+
             <div className="flex gap-3 justify-center">
-              <Button onClick={() => router.push(`/~/files/${id}`)} variant="outline">
+              <Button
+                onClick={() => router.push(`/~/files/${id}`)}
+                variant="outline"
+              >
                 Back to File
               </Button>
               <Button onClick={() => router.push("/~/files")}>
@@ -261,18 +303,22 @@ export default function FileQuiz() {
           {questions.map((q, index) => {
             const userAnswer = selectedAnswers[index];
             const isCorrect = userAnswer === q.answer_idx;
-            
+
             return (
-              <Card 
-                key={index} 
+              <Card
+                key={index}
                 className="p-6 space-y-4"
-                style={{ animation: `scaleIn 0.5s ease-out ${index * 0.1}s both` }}
+                style={{
+                  animation: `scaleIn 0.5s ease-out ${index * 0.1}s both`,
+                }}
               >
                 <div className="flex items-start gap-3">
-                  <div className={cn(
-                    "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center",
-                    isCorrect ? "bg-green-500/10" : "bg-red-500/10"
-                  )}>
+                  <div
+                    className={cn(
+                      "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center",
+                      isCorrect ? "bg-green-500/10" : "bg-red-500/10",
+                    )}
+                  >
                     {isCorrect ? (
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
                     ) : (
@@ -289,28 +335,40 @@ export default function FileQuiz() {
                           key={optIdx}
                           className={cn(
                             "p-3 rounded-lg border-2 transition-all",
-                            optIdx === q.answer_idx && "border-green-500 bg-green-500/10",
-                            optIdx === userAnswer && optIdx !== q.answer_idx && "border-red-500 bg-red-500/10",
-                            optIdx !== q.answer_idx && optIdx !== userAnswer && "border-border"
+                            optIdx === q.answer_idx &&
+                              "border-green-500 bg-green-500/10",
+                            optIdx === userAnswer &&
+                              optIdx !== q.answer_idx &&
+                              "border-red-500 bg-red-500/10",
+                            optIdx !== q.answer_idx &&
+                              optIdx !== userAnswer &&
+                              "border-border",
                           )}
                         >
                           <div className="flex items-center gap-2">
-                            <span className="font-medium">{String.fromCharCode(65 + optIdx)}.</span>
+                            <span className="font-medium">
+                              {String.fromCharCode(65 + optIdx)}.
+                            </span>
                             <span>{option}</span>
                             {optIdx === q.answer_idx && (
                               <CheckCircle2 className="h-4 w-4 text-green-500 ml-auto" />
                             )}
-                            {optIdx === userAnswer && optIdx !== q.answer_idx && (
-                              <XCircle className="h-4 w-4 text-red-500 ml-auto" />
-                            )}
+                            {optIdx === userAnswer &&
+                              optIdx !== q.answer_idx && (
+                                <XCircle className="h-4 w-4 text-red-500 ml-auto" />
+                              )}
                           </div>
                         </div>
                       ))}
                     </div>
                     <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
                       <p className="text-sm">
-                        <span className="font-semibold text-blue-600 dark:text-blue-400">Explanation: </span>
-                        <span className="text-muted-foreground">{q.explanation}</span>
+                        <span className="font-semibold text-blue-600 dark:text-blue-400">
+                          Explanation:{" "}
+                        </span>
+                        <span className="text-muted-foreground">
+                          {q.explanation}
+                        </span>
                       </p>
                     </div>
                   </div>
@@ -338,33 +396,56 @@ export default function FileQuiz() {
         }
       `}</style>
 
-      <Breadcrumb style={{ animation: 'fadeInUp 0.5s ease-out' }}>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/~">~</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/~/files/${id}`}>{fileDetails.name}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>Quiz</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      <Breadcrumb
+        style={{ animation: "fadeInUp 0.5s ease-out" }}
+        className="backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
+      >
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              href="/~"
+              className="hover:text-primary transition-colors font-medium"
+            >
+              ~
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <Slash className="text-muted-foreground/50" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              href="/~/files"
+              className="hover:text-primary transition-colors font-medium"
+            >
+              Your Files
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <Slash className="text-muted-foreground/50" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              href={`/~/files/${id}`}
+              className="hover:text-primary transition-colors font-medium"
+            >
+              {fileDetails.name}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <Slash className="text-muted-foreground/50" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbPage className="text-foreground font-medium">
+              Quiz
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
-      <div className="space-y-4" style={{ animation: 'fadeInUp 0.5s ease-out' }}>
+      <div
+        className="space-y-4"
+        style={{ animation: "fadeInUp 0.5s ease-out" }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -382,19 +463,25 @@ export default function FileQuiz() {
             <span>Take your time</span>
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <Progress value={progress} className="h-2" />
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>{selectedAnswers.filter(a => a !== -1).length} answered</span>
-            <span>{questions.length - selectedAnswers.filter(a => a !== -1).length} remaining</span>
+            <span>
+              {selectedAnswers.filter((a) => a !== -1).length} answered
+            </span>
+            <span>
+              {questions.length -
+                selectedAnswers.filter((a) => a !== -1).length}{" "}
+              remaining
+            </span>
           </div>
         </div>
       </div>
 
-      <div 
+      <div
         className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.1s both' }}
+        style={{ animation: "fadeInUp 0.5s ease-out 0.1s both" }}
       >
         <Card className="p-8 space-y-6">
           <div className="space-y-4">
@@ -416,21 +503,25 @@ export default function FileQuiz() {
                     "w-full p-4 rounded-lg border-2 text-left transition-all hover:scale-[1.02]",
                     selectedAnswers[currentQuestion] === index
                       ? "border-primary bg-primary/10 shadow-md"
-                      : "border-border hover:border-primary/50 hover:bg-muted/50"
+                      : "border-border hover:border-primary/50 hover:bg-muted/50",
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={cn(
-                      "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
-                      selectedAnswers[currentQuestion] === index
-                        ? "border-primary bg-primary"
-                        : "border-muted-foreground"
-                    )}>
+                    <div
+                      className={cn(
+                        "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all",
+                        selectedAnswers[currentQuestion] === index
+                          ? "border-primary bg-primary"
+                          : "border-muted-foreground",
+                      )}
+                    >
                       {selectedAnswers[currentQuestion] === index && (
                         <CheckCircle2 className="h-4 w-4 text-white" />
                       )}
                     </div>
-                    <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
+                    <span className="font-medium mr-2">
+                      {String.fromCharCode(65 + index)}.
+                    </span>
                     <span className="flex-1">{option}</span>
                   </div>
                 </button>
@@ -442,7 +533,9 @@ export default function FileQuiz() {
         <Card className="p-4 h-fit lg:sticky lg:top-8 lg:w-[200px]">
           <div className="flex items-center gap-2 mb-3">
             <Target className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">Quick Navigation</span>
+            <span className="text-sm font-medium text-muted-foreground">
+              Quick Navigation
+            </span>
           </div>
           <div className="grid grid-cols-5 lg:grid-cols-4 gap-2">
             {questions.map((_, index) => (
@@ -451,9 +544,14 @@ export default function FileQuiz() {
                 onClick={() => setCurrentQuestion(index)}
                 className={cn(
                   "w-10 h-10 rounded-lg border-2 font-medium transition-all hover:scale-105",
-                  currentQuestion === index && "border-primary bg-primary text-white",
-                  currentQuestion !== index && selectedAnswers[index] !== -1 && "border-green-500 bg-green-500/10 text-green-600",
-                  currentQuestion !== index && selectedAnswers[index] === -1 && "border-border hover:border-primary/50"
+                  currentQuestion === index &&
+                    "border-primary bg-primary text-white",
+                  currentQuestion !== index &&
+                    selectedAnswers[index] !== -1 &&
+                    "border-green-500 bg-green-500/10 text-green-600",
+                  currentQuestion !== index &&
+                    selectedAnswers[index] === -1 &&
+                    "border-border hover:border-primary/50",
                 )}
               >
                 {index + 1}
@@ -463,9 +561,9 @@ export default function FileQuiz() {
         </Card>
       </div>
 
-      <div 
+      <div
         className="flex items-center justify-between"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+        style={{ animation: "fadeInUp 0.5s ease-out 0.2s both" }}
       >
         <Button
           onClick={handlePrevious}
@@ -485,19 +583,17 @@ export default function FileQuiz() {
             className="gap-2"
           >
             <Trophy className="h-4 w-4" />
-            {allAnswered ? "Submit Quiz" : `Answer ${questions.length - selectedAnswers.filter(a => a !== -1).length} more`}
+            {allAnswered
+              ? "Submit Quiz"
+              : `Answer ${questions.length - selectedAnswers.filter((a) => a !== -1).length} more`}
           </Button>
         ) : (
-          <Button
-            onClick={handleNext}
-            disabled={!isAnswered}
-            size="lg"
-          >
+          <Button onClick={handleNext} disabled={!isAnswered} size="lg">
             {isAnswered ? "Next Question" : "Select an answer"}
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         )}
-      </div>    
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { useEffect, useState } from "react";
 
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"], weight: ["500"] });
 
@@ -19,9 +19,12 @@ export default function RootLayout({
   useEffect(() => {
     const handleThemeChange = () => {
       const savedTheme = localStorage.getItem("theme") || "system";
-      
+
       if (savedTheme === "system") {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+          .matches
+          ? "dark"
+          : "light";
         setTheme(systemTheme);
       } else {
         setTheme(savedTheme);
@@ -31,7 +34,7 @@ export default function RootLayout({
     handleThemeChange();
 
     window.addEventListener("themeChange", handleThemeChange);
-    
+
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleSystemChange = (e: MediaQueryListEvent) => {
       if (localStorage.getItem("theme") === "system") {

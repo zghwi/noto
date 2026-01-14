@@ -40,7 +40,7 @@ export function NewFile() {
     }
     const formData = new FormData();
     formData.append("file", file!);
-    
+
     setLoading(true);
     const res = await uploadFile(formData);
     const data = res.data;
@@ -105,13 +105,15 @@ export function NewFile() {
           className={cn(
             "flex flex-col items-center justify-center w-full p-8 mt-2 mb-3 border-2 border-dashed rounded-lg cursor-pointer transition-all",
             "hover:border-primary/60 bg-muted/30",
-            isDragging && "border-primary bg-primary/5 scale-[1.02]"
+            isDragging && "border-primary bg-primary/5 scale-[1.02]",
           )}
         >
-          <Upload className={cn(
-            "h-8 w-8 mb-3 transition-all",
-            isDragging ? "text-primary scale-110" : "text-muted-foreground"
-          )} />
+          <Upload
+            className={cn(
+              "h-8 w-8 mb-3 transition-all",
+              isDragging ? "text-primary scale-110" : "text-muted-foreground",
+            )}
+          />
           <p className="text-sm text-center">
             {file ? (
               <span className="flex items-center gap-2 text-foreground font-medium">
@@ -121,10 +123,13 @@ export function NewFile() {
             ) : (
               <span className="text-muted-foreground">
                 {isDragging ? (
-                  <span className="text-primary font-medium">Drop file here</span>
+                  <span className="text-primary font-medium">
+                    Drop file here
+                  </span>
                 ) : (
                   <>
-                    <span className="font-medium">Click to choose</span> or drag and drop
+                    <span className="font-medium">Click to choose</span> or drag
+                    and drop
                   </>
                 )}
               </span>

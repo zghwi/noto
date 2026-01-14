@@ -22,7 +22,12 @@ import {
   Clock,
   Minus,
 } from "lucide-react";
-import { deleteFileById, deleteQuizByFileId, getFilesDetails, getQuizByFileId } from "@/utils/api";
+import {
+  deleteFileById,
+  deleteQuizByFileId,
+  getFilesDetails,
+  getQuizByFileId,
+} from "@/utils/api";
 import { useEffect, useState } from "react";
 import {
   Empty,
@@ -70,7 +75,9 @@ export default function Files() {
   const router = useRouter();
   const [files, setFiles] = useState<Mixed[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<any>([]);
-  const [quizScores, setQuizScores] = useState<{ [key: string]: number | null }>({});
+  const [quizScores, setQuizScores] = useState<{
+    [key: string]: number | null;
+  }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -88,7 +95,7 @@ export default function Files() {
       } else {
         setFiles(files.data);
         setFilteredFiles(files.data);
-        
+
         const scores: { [key: string]: number | null } = {};
         await Promise.all(
           files.data.map(async (file: any) => {
@@ -98,7 +105,7 @@ export default function Files() {
             } else {
               scores[file.id] = null;
             }
-          })
+          }),
         );
         setQuizScores(scores);
         setLoading(false);
@@ -194,7 +201,7 @@ export default function Files() {
         </span>
       );
     }
-    
+
     if (score === -1) {
       return (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
@@ -204,13 +211,17 @@ export default function Files() {
       );
     }
 
-    const colorClass = 
-      score >= 90 ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20" :
-      score >= 70 ? "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20" :
-      "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20";
+    const colorClass =
+      score >= 90
+        ? "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20"
+        : score >= 70
+          ? "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20"
+          : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20";
 
     return (
-      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${colorClass}`}>
+      <span
+        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${colorClass}`}
+      >
         <Trophy className="h-3 w-3 mr-1" />
         {score}%
       </span>
@@ -227,7 +238,7 @@ export default function Files() {
           isDeleting ? "opacity-0 scale-95" : "opacity-100 scale-100"
         }`}
         style={{
-          animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`
+          animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`,
         }}
       >
         <TableCell className="w-12">
@@ -322,7 +333,10 @@ export default function Files() {
             <File className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1 min-w-0 overflow-hidden">
-            <Link href={`/~/files/${file.id ?? file.Id}`} className="block overflow-hidden">
+            <Link
+              href={`/~/files/${file.id ?? file.Id}`}
+              className="block overflow-hidden"
+            >
               <p className="font-semibold hover:text-primary transition-colors hover:underline truncate overflow-hidden text-ellipsis whitespace-nowrap">
                 {file.name ?? file.Name}
               </p>
@@ -369,28 +383,38 @@ export default function Files() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Breadcrumb style={{ animation: 'slideIn 0.5s ease-out' }}>
+          <Breadcrumb
+            style={{ animation: "slideIn 0.5s ease-out" }}
+            className="sticky top-3 z-10 backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
+          >
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/~">~</BreadcrumbLink>
+                <BreadcrumbLink
+                  href="/~"
+                  className="hover:text-primary transition-colors font-medium"
+                >
+                  ~
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
-                <SlashIcon />
+                <SlashIcon className="text-muted-foreground/50" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbPage>Your Files</BreadcrumbPage>
+                <BreadcrumbPage className="text-foreground font-medium">
+                  Your Files
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div style={{ animation: 'slideIn 0.5s ease-out 0.1s both' }}>
+          <div style={{ animation: "slideIn 0.5s ease-out 0.1s both" }}>
             <NewFile />
           </div>
         </div>
 
         {!loading && files.length > 0 && (
-          <div 
+          <div
             className="flex flex-col sm:flex-row gap-3"
-            style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+            style={{ animation: "fadeInUp 0.5s ease-out 0.2s both" }}
           >
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -445,7 +469,11 @@ export default function Files() {
                   </TableHeader>
                   <TableBody>
                     {filteredFiles.map((file: any, index: number) => (
-                      <FileRow key={file.id ?? file.Id} file={file} index={index} />
+                      <FileRow
+                        key={file.id ?? file.Id}
+                        file={file}
+                        index={index}
+                      />
                     ))}
                   </TableBody>
                 </Table>
@@ -466,7 +494,10 @@ export default function Files() {
           </div>
         </div>
       ) : (
-        <div className="py-12" style={{ animation: 'fadeInUp 0.5s ease-out 0.4s both' }}>
+        <div
+          className="py-12"
+          style={{ animation: "fadeInUp 0.5s ease-out 0.4s both" }}
+        >
           <Empty className="border rounded-xl">
             <EmptyHeader>
               <EmptyMedia variant="icon">

@@ -27,10 +27,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { 
-  SlashIcon, 
+import {
+  SlashIcon,
   User,
-  Palette, 
+  Palette,
   AlertTriangle,
   Save,
   Moon,
@@ -43,11 +43,16 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { deleteAccount, deleteAccountData, getUser, updateProfile } from "@/utils/api";
+import {
+  deleteAccount,
+  deleteAccountData,
+  getUser,
+  updateProfile,
+} from "@/utils/api";
 import * as z from "zod";
 
 const updateSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters")
+  name: z.string().min(2, "Name must be at least 2 characters"),
 });
 
 export default function Settings() {
@@ -86,7 +91,7 @@ export default function Settings() {
     localStorage.setItem("theme", theme);
     window.dispatchEvent(new Event("themeChange"));
     toast.success("Changed theme successfully!");
-  }
+  };
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -135,24 +140,34 @@ export default function Settings() {
         }
       `}</style>
 
-      <Breadcrumb style={{ animation: 'slideIn 0.5s ease-out' }}>
+      <Breadcrumb
+        style={{ animation: "slideIn 0.5s ease-out" }}
+        className="sticky top-3 z-10 backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
+      >
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/~">~</BreadcrumbLink>
+            <BreadcrumbLink
+              href="/~"
+              className="hover:text-primary transition-colors font-medium"
+            >
+              ~
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
-            <SlashIcon />
+            <SlashIcon className="text-muted-foreground/50" />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage>Settings</BreadcrumbPage>
+            <BreadcrumbPage className="text-foreground font-medium">
+              Settings
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
       <div className="grid gap-6">
-        <div 
+        <div
           className="rounded-xl border bg-card p-6"
-          style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+          style={{ animation: "fadeInUp 0.5s ease-out 0.2s both" }}
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
@@ -160,7 +175,9 @@ export default function Settings() {
             </div>
             <div>
               <h2 className="text-xl font-semibold">Profile</h2>
-              <p className="text-sm text-muted-foreground">Update your personal information</p>
+              <p className="text-sm text-muted-foreground">
+                Update your personal information
+              </p>
             </div>
           </div>
 
@@ -175,16 +192,19 @@ export default function Settings() {
               />
             </div>
 
-            <Button onClick={handleSaveProfile} className="w-full cursor-pointer sm:w-auto">
+            <Button
+              onClick={handleSaveProfile}
+              className="w-full cursor-pointer sm:w-auto"
+            >
               <Save className="h-4 w-4 mr-2" />
               Save Changes
             </Button>
           </div>
         </div>
 
-        <div 
+        <div
           className="rounded-xl border bg-card p-6"
-          style={{ animation: 'fadeInUp 0.5s ease-out 0.4s both' }}
+          style={{ animation: "fadeInUp 0.5s ease-out 0.4s both" }}
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-500/10">
@@ -192,7 +212,9 @@ export default function Settings() {
             </div>
             <div>
               <h2 className="text-xl font-semibold">Preferences</h2>
-              <p className="text-sm text-muted-foreground">Customize your experience</p>
+              <p className="text-sm text-muted-foreground">
+                Customize your experience
+              </p>
             </div>
           </div>
 
@@ -228,16 +250,19 @@ export default function Settings() {
                 Choose how Noto looks to you
               </p>
             </div>
-            <Button onClick={handleChangeTheme} className="w-full cursor-pointer sm:w-auto">
+            <Button
+              onClick={handleChangeTheme}
+              className="w-full cursor-pointer sm:w-auto"
+            >
               <Save className="h-4 w-4 mr-2" />
               Save Changes
             </Button>
           </div>
         </div>
 
-        <div 
+        <div
           className="rounded-xl border bg-card p-6"
-          style={{ animation: 'fadeInUp 0.5s ease-out 0.5s both' }}
+          style={{ animation: "fadeInUp 0.5s ease-out 0.5s both" }}
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-cyan-500/10">
@@ -245,7 +270,9 @@ export default function Settings() {
             </div>
             <div>
               <h2 className="text-xl font-semibold">About</h2>
-              <p className="text-sm text-muted-foreground">App information and resources</p>
+              <p className="text-sm text-muted-foreground">
+                App information and resources
+              </p>
             </div>
           </div>
 
@@ -256,24 +283,32 @@ export default function Settings() {
             </div>
             <Separator />
             <div className="flex flex-col gap-2">
-              <a href="https://github.com/zghwi/noto" target="_blank" className="text-sm text-primary hover:underline">
+              <a
+                href="https://github.com/zghwi/noto"
+                target="_blank"
+                className="text-sm text-primary hover:underline"
+              >
                 GitHub
               </a>
             </div>
           </div>
         </div>
 
-        <div 
+        <div
           className="rounded-xl border border-red-500/20 bg-red-500/5 p-6"
-          style={{ animation: 'fadeInUp 0.5s ease-out 0.6s both' }}
+          style={{ animation: "fadeInUp 0.5s ease-out 0.6s both" }}
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-500/10">
               <AlertTriangle className="h-5 w-5 text-red-500" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">Danger Zone</h2>
-              <p className="text-sm text-muted-foreground">Irreversible actions</p>
+              <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">
+                Danger Zone
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Irreversible actions
+              </p>
             </div>
           </div>
 
@@ -281,11 +316,16 @@ export default function Settings() {
             <div className="flex items-center justify-between p-4 rounded-lg border bg-card">
               <div>
                 <h3 className="font-medium">Sign Out</h3>
-                <p className="text-sm text-muted-foreground">Sign out of your account</p>
+                <p className="text-sm text-muted-foreground">
+                  Sign out of your account
+                </p>
               </div>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="border-red-500/20 cursor-pointer">
+                  <Button
+                    variant="outline"
+                    className="border-red-500/20 cursor-pointer"
+                  >
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
                   </Button>
@@ -294,7 +334,8 @@ export default function Settings() {
                   <DialogHeader>
                     <DialogTitle>Sign out of your account?</DialogTitle>
                     <DialogDescription>
-                      You'll need to sign in again to access your files and quizzes.
+                      You'll need to sign in again to access your files and
+                      quizzes.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="flex gap-3 pt-4">
@@ -312,7 +353,9 @@ export default function Settings() {
 
             <div className="flex items-center justify-between p-4 rounded-lg border border-red-500/20 bg-red-500/5">
               <div>
-                <h3 className="font-medium text-red-600 dark:text-red-400">Delete Account</h3>
+                <h3 className="font-medium text-red-600 dark:text-red-400">
+                  Delete Account
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   Permanently delete your account and all data
                 </p>
@@ -328,8 +371,8 @@ export default function Settings() {
                   <DialogHeader>
                     <DialogTitle>Delete your account?</DialogTitle>
                     <DialogDescription>
-                      This action cannot be undone. This will permanently delete your account,
-                      all your files, quizzes, and flashcards.
+                      This action cannot be undone. This will permanently delete
+                      your account, all your files, quizzes, and flashcards.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="flex gap-3 pt-4">

@@ -15,11 +15,16 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
-import { getFileById, getQuizByFileId, getFlashcardsByFileId, createXByFileId } from "@/utils/api";
-import { 
-  FileQuestion, 
-  Sparkles, 
-  Brain, 
+import {
+  getFileById,
+  getQuizByFileId,
+  getFlashcardsByFileId,
+  createXByFileId,
+} from "@/utils/api";
+import {
+  FileQuestion,
+  Sparkles,
+  Brain,
   FileText,
   Calendar,
   ArrowRight,
@@ -30,7 +35,8 @@ import {
   Trophy,
   Clock,
   Minus,
-  Plus
+  Plus,
+  SlashIcon,
 } from "lucide-react";
 import { redirect, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -57,7 +63,8 @@ export default function FileById() {
   >();
   const [loading, setLoading] = useState<boolean>();
   const [generatingQuiz, setGeneratingQuiz] = useState<boolean>(false);
-  const [generatingFlashcards, setGeneratingFlashcards] = useState<boolean>(false);
+  const [generatingFlashcards, setGeneratingFlashcards] =
+    useState<boolean>(false);
   const [existingQuiz, setExistingQuiz] = useState<any>(null);
   const [existingFlashcards, setExistingFlashcards] = useState<any>(null);
   const [copiedQuiz, setCopiedQuiz] = useState<boolean>(false);
@@ -79,14 +86,14 @@ export default function FileById() {
         }
       } else {
         setFile(file.data);
-        
+
         const quiz = await getQuizByFileId(id as string);
         const flashcards = await getFlashcardsByFileId(id as string);
-        
+
         if (!quiz.error && quiz.data) {
           setExistingQuiz(quiz.data);
         }
-        
+
         if (!flashcards.error && flashcards.data) {
           setExistingFlashcards(flashcards.data);
         }
@@ -99,7 +106,9 @@ export default function FileById() {
     setGeneratingQuiz(true);
     try {
       const eres = await getQuizByFileId(id as string);
-      const amount = !eres.error ? JSON.parse(eres.data.questions).length : quizAmount;
+      const amount = !eres.error
+        ? JSON.parse(eres.data.questions).length
+        : quizAmount;
       const res = await createXByFileId("quiz", id as string, amount);
       if (res.error) toast.error(res.type);
       else {
@@ -107,7 +116,6 @@ export default function FileById() {
         //@ts-ignore
         toast.success(res.data.message);
       }
-
 
       const quiz = await getQuizByFileId(id as string);
       if (!quiz.error && quiz.data) {
@@ -124,14 +132,18 @@ export default function FileById() {
   const handleGenerateFlashcards = async () => {
     setGeneratingFlashcards(true);
     try {
-      const res = await createXByFileId("flashcards", id as string, flashcardsAmount);
+      const res = await createXByFileId(
+        "flashcards",
+        id as string,
+        flashcardsAmount,
+      );
       if (res.error) toast.error(res.type);
       else {
         setShowConfetti(true);
         //@ts-ignore
         toast.success(res.data.message);
       }
-      
+
       const flashcards = await getFlashcardsByFileId(id as string);
       if (!flashcards.error && flashcards.data) {
         setExistingFlashcards(flashcards.data);
@@ -180,7 +192,7 @@ export default function FileById() {
     );
   }
 
-  if (!file || 'error' in file) {
+  if (!file || "error" in file) {
     return (
       <div className="py-12">
         <Empty className="border rounded-xl">
@@ -227,7 +239,8 @@ export default function FileById() {
           }
         }
         @keyframes pulse-glow {
-          0%, 100% {
+          0%,
+          100% {
             box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
           }
           50% {
@@ -236,29 +249,39 @@ export default function FileById() {
         }
       `}</style>
 
-      <Breadcrumb style={{ animation: 'slideIn 0.5s ease-out' }}>
+      <Breadcrumb
+        style={{ animation: "slideIn 0.5s ease-out" }}
+        className="sticky top-3 z-10 backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
+      >
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/~">~</BreadcrumbLink>
+            <BreadcrumbLink
+              href="/~"
+              className="hover:text-primary transition-colors font-medium"
+            >
+              ~
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
-            <Slash />
+            <SlashIcon className="text-muted-foreground/50" />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
             <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
-            <Slash />
+            <SlashIcon className="text-muted-foreground/50" />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage className="max-w-[200px] truncate">{file.name}</BreadcrumbPage>
+            <BreadcrumbPage className="text-foreground font-medium max-w-[200px] truncate">
+              {file.name}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div 
+      <div
         className="rounded-xl border bg-card p-6 hover:shadow-md transition-shadow"
-        style={{ animation: 'fadeInUp 0.5s ease-out 0.1s both' }}
+        style={{ animation: "fadeInUp 0.5s ease-out 0.1s both" }}
       >
         <div className="flex items-start gap-4">
           <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-primary/10 flex-shrink-0 group-hover:scale-110 transition-transform">
@@ -288,23 +311,26 @@ export default function FileById() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">
-            {existingQuiz || existingFlashcards ? "Your Learning Tools" : "Generate Learning Tools"}
+            {existingQuiz || existingFlashcards
+              ? "Your Learning Tools"
+              : "Generate Learning Tools"}
           </h2>
           {(existingQuiz || existingFlashcards) && (
             <span className="text-sm text-muted-foreground">
-              {[existingQuiz, existingFlashcards].filter(Boolean).length} of 2 generated
+              {[existingQuiz, existingFlashcards].filter(Boolean).length} of 2
+              generated
             </span>
           )}
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {existingQuiz ? (
-            <div 
+            <div
               className="group relative overflow-hidden rounded-xl border-2 border-primary/30 bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
-              style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+              style={{ animation: "fadeInUp 0.5s ease-out 0.2s both" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
-              
+
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg group-hover:scale-110 transition-transform">
@@ -317,27 +343,32 @@ export default function FileById() {
                     </span>
                   ) : (
                     <div className="flex flex-col items-end gap-1">
-                      <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-lg font-bold ${
-                        existingQuiz.score >= 90 ? "bg-green-500/20 text-green-600 dark:text-green-400 border-2 border-green-500/40" :
-                        existingQuiz.score >= 70 ? "bg-orange-500/20 text-orange-600 dark:text-orange-400 border-2 border-orange-500/40" :
-                        "bg-red-500/20 text-red-600 dark:text-red-400 border-2 border-red-500/40"
-                      } border`}>
+                      <span
+                        className={`inline-flex items-center px-4 py-1.5 rounded-full text-lg font-bold ${
+                          existingQuiz.score >= 90
+                            ? "bg-green-500/20 text-green-600 dark:text-green-400 border-2 border-green-500/40"
+                            : existingQuiz.score >= 70
+                              ? "bg-orange-500/20 text-orange-600 dark:text-orange-400 border-2 border-orange-500/40"
+                              : "bg-red-500/20 text-red-600 dark:text-red-400 border-2 border-red-500/40"
+                        } border`}
+                      >
                         <Trophy className="h-4 w-4 mr-1.5" />
                         {existingQuiz.score}%
                       </span>
                     </div>
                   )}
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-2">
-                    {existingQuiz.score === -1 ? "Quiz Available" : "Quiz Completed"}
+                    {existingQuiz.score === -1
+                      ? "Quiz Available"
+                      : "Quiz Completed"}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {existingQuiz.score === -1 
+                    {existingQuiz.score === -1
                       ? "Your interactive quiz is ready. Test your knowledge or share it with others."
-                      : `You scored ${existingQuiz.score}%. ${existingQuiz.score >= 90 ? "Excellent work!" : existingQuiz.score >= 70 ? "Good job!" : "Keep practicing!"}`
-                    }
+                      : `You scored ${existingQuiz.score}%. ${existingQuiz.score >= 90 ? "Excellent work!" : existingQuiz.score >= 70 ? "Good job!" : "Keep practicing!"}`}
                   </p>
                 </div>
 
@@ -351,9 +382,9 @@ export default function FileById() {
                     </Link>
                   )}
 
-                  <Button 
-                    onClick={handleCopyQuizLink} 
-                    variant="outline" 
+                  <Button
+                    onClick={handleCopyQuizLink}
+                    variant="outline"
                     className="w-full rounded-full"
                   >
                     {copiedQuiz ? (
@@ -369,10 +400,10 @@ export default function FileById() {
                     )}
                   </Button>
 
-                  <Button 
-                    onClick={handleGenerateQuiz} 
-                    disabled={generatingQuiz} 
-                    variant="ghost" 
+                  <Button
+                    onClick={handleGenerateQuiz}
+                    disabled={generatingQuiz}
+                    variant="ghost"
                     className="w-full rounded-full text-xs"
                   >
                     {generatingQuiz ? (
@@ -391,23 +422,24 @@ export default function FileById() {
               </div>
             </div>
           ) : (
-            <div 
+            <div
               className="group relative overflow-hidden rounded-xl border bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
-              style={{ animation: 'fadeInUp 0.5s ease-out 0.2s both' }}
+              style={{ animation: "fadeInUp 0.5s ease-out 0.2s both" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white mb-2 shadow-lg group-hover:scale-110 transition-transform">
                   <Brain className="h-6 w-6" />
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Generate Quiz</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Create an interactive quiz with multiple choice questions based on your notes. Perfect for testing your knowledge.
+                    Create an interactive quiz with multiple choice questions
+                    based on your notes. Perfect for testing your knowledge.
                   </p>
-                  
+
                   <div className="space-y-2 mb-4">
                     <Label htmlFor="quizAmount" className="text-sm font-medium">
                       Number of Questions
@@ -417,7 +449,9 @@ export default function FileById() {
                         size="icon"
                         variant="outline"
                         className="h-9 w-9 rounded-full"
-                        onClick={() => setQuizAmount(Math.max(5, quizAmount - 1))}
+                        onClick={() =>
+                          setQuizAmount(Math.max(5, quizAmount - 1))
+                        }
                         disabled={quizAmount <= 5}
                       >
                         <Minus className="h-4 w-4" />
@@ -438,7 +472,9 @@ export default function FileById() {
                         size="icon"
                         variant="outline"
                         className="h-9 w-9 rounded-full"
-                        onClick={() => setQuizAmount(Math.min(20, quizAmount + 1))}
+                        onClick={() =>
+                          setQuizAmount(Math.min(20, quizAmount + 1))
+                        }
                         disabled={quizAmount >= 20}
                       >
                         <Plus className="h-4 w-4" />
@@ -449,8 +485,8 @@ export default function FileById() {
                     </p>
                   </div>
                 </div>
-                
-                <Button 
+
+                <Button
                   onClick={handleGenerateQuiz}
                   disabled={generatingQuiz}
                   className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow"
@@ -473,12 +509,12 @@ export default function FileById() {
           )}
 
           {existingFlashcards ? (
-            <div 
+            <div
               className="group relative overflow-hidden rounded-xl border-2 border-primary/30 bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
-              style={{ animation: 'fadeInUp 0.5s ease-out 0.3s both' }}
+              style={{ animation: "fadeInUp 0.5s ease-out 0.3s both" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
-              
+
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg group-hover:scale-110 transition-transform">
@@ -489,24 +525,25 @@ export default function FileById() {
                     Ready
                   </span>
                 </div>
-                
+
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Flashcards Available</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Flashcards Available
+                  </h3>
                   <p className="text-sm text-muted-foreground">
-                    Your flashcards are ready for review. Practice now or share them with others.
+                    Your flashcards are ready for review. Practice now or share
+                    them with others.
                   </p>
                 </div>
-                
+
                 <div className="flex flex-col gap-2 pt-2">
                   <Link href={`/~/files/${id}/flashcards`} className="w-full">
-                    <Button 
-                      className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow"
-                    >
+                    <Button className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow">
                       Start Studying
                       <ArrowRight className="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
-                  <Button 
+                  <Button
                     onClick={handleCopyFlashcardsLink}
                     variant="outline"
                     className="w-full rounded-full"
@@ -523,7 +560,7 @@ export default function FileById() {
                       </>
                     )}
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleGenerateFlashcards}
                     disabled={generatingFlashcards}
                     variant="ghost"
@@ -545,25 +582,31 @@ export default function FileById() {
               </div>
             </div>
           ) : (
-            <div 
+            <div
               className="group relative overflow-hidden rounded-xl border bg-card p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
-              style={{ animation: 'fadeInUp 0.5s ease-out 0.3s both' }}
+              style={{ animation: "fadeInUp 0.5s ease-out 0.3s both" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
+
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white mb-2 shadow-lg group-hover:scale-110 transition-transform">
                   <Sparkles className="h-6 w-6" />
                 </div>
-                
+
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Generate Flashcards</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    Generate Flashcards
+                  </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Transform your notes into digital flashcards for quick review. Great for memorization and active recall.
+                    Transform your notes into digital flashcards for quick
+                    review. Great for memorization and active recall.
                   </p>
-                  
+
                   <div className="space-y-2 mb-4">
-                    <Label htmlFor="flashcardsAmount" className="text-sm font-medium">
+                    <Label
+                      htmlFor="flashcardsAmount"
+                      className="text-sm font-medium"
+                    >
                       Number of Flashcards
                     </Label>
                     <div className="flex items-center gap-2">
@@ -571,7 +614,9 @@ export default function FileById() {
                         size="icon"
                         variant="outline"
                         className="h-9 w-9 rounded-full"
-                        onClick={() => setFlashcardsAmount(Math.max(5, flashcardsAmount - 1))}
+                        onClick={() =>
+                          setFlashcardsAmount(Math.max(5, flashcardsAmount - 1))
+                        }
                         disabled={flashcardsAmount <= 5}
                       >
                         <Minus className="h-4 w-4" />
@@ -592,7 +637,11 @@ export default function FileById() {
                         size="icon"
                         variant="outline"
                         className="h-9 w-9 rounded-full"
-                        onClick={() => setFlashcardsAmount(Math.min(20, flashcardsAmount + 1))}
+                        onClick={() =>
+                          setFlashcardsAmount(
+                            Math.min(20, flashcardsAmount + 1),
+                          )
+                        }
                         disabled={flashcardsAmount >= 20}
                       >
                         <Plus className="h-4 w-4" />
@@ -603,8 +652,8 @@ export default function FileById() {
                     </p>
                   </div>
                 </div>
-                
-                <Button 
+
+                <Button
                   onClick={handleGenerateFlashcards}
                   disabled={generatingFlashcards}
                   className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow"
@@ -629,23 +678,27 @@ export default function FileById() {
       </div>
 
       {!existingQuiz && !existingFlashcards && (
-        <div 
+        <div
           className="rounded-xl border bg-muted/30 p-6"
-          style={{ animation: 'fadeInUp 0.5s ease-out 0.4s both' }}
+          style={{ animation: "fadeInUp 0.5s ease-out 0.4s both" }}
         >
           <div className="flex items-start gap-3">
             <Sparkles className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
             <div>
               <h3 className="font-semibold mb-1">AI-Powered Generation</h3>
               <p className="text-sm text-muted-foreground">
-                Our AI analyzes your file content to create personalized learning materials. 
-                The generation typically takes 10-30 seconds depending on the file size.
+                Our AI analyzes your file content to create personalized
+                learning materials. The generation typically takes 10-30 seconds
+                depending on the file size.
               </p>
             </div>
           </div>
         </div>
       )}
-      <Confetti visible={showConfetti} onAnimationFinish={() => setShowConfetti(false)} />
+      <Confetti
+        visible={showConfetti}
+        onAnimationFinish={() => setShowConfetti(false)}
+      />
     </div>
   );
 }
