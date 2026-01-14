@@ -4,7 +4,8 @@
 
 **Noto** is an advanced interactive learning platform designed to streamline the study process. By leveraging the power of **Google Gemini AI**, **Noto** transforms uploaded documents and notes into dynamic learning assets, like flashcards and interactive quizzes.
 
-> This project was developed as a **Computer Science Final Project for the 2026 Bagrut**.
+> This project was developed as a **Computer Science Final Project for the 2026 Bagrut**.<br />
+> The live demo is still not available, but will be soon.
 
 ---
 
