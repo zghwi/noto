@@ -38,6 +38,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Confetti from "@/components/Confetti";
 
 export default function FileById() {
   const [file, setFile] = useState<
@@ -63,6 +64,7 @@ export default function FileById() {
   const [copiedFlashcards, setCopiedFlashcards] = useState<boolean>(false);
   const [quizAmount, setQuizAmount] = useState<number>(5);
   const [flashcardsAmount, setFlashcardsAmount] = useState<number>(5);
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -100,8 +102,11 @@ export default function FileById() {
       const amount = !eres.error ? JSON.parse(eres.data.questions).length : quizAmount;
       const res = await createXByFileId("quiz", id as string, amount);
       if (res.error) toast.error(res.type);
-      //@ts-ignore
-      else toast.success(res.data.message);
+      else {
+        setShowConfetti(true);
+        //@ts-ignore
+        toast.success(res.data.message);
+      }
 
 
       const quiz = await getQuizByFileId(id as string);
@@ -121,8 +126,11 @@ export default function FileById() {
     try {
       const res = await createXByFileId("flashcards", id as string, flashcardsAmount);
       if (res.error) toast.error(res.type);
-      //@ts-ignore
-      else toast.success(res.data.message);
+      else {
+        setShowConfetti(true);
+        //@ts-ignore
+        toast.success(res.data.message);
+      }
       
       const flashcards = await getFlashcardsByFileId(id as string);
       if (!flashcards.error && flashcards.data) {
@@ -637,6 +645,7 @@ export default function FileById() {
           </div>
         </div>
       )}
+      <Confetti visible={showConfetti} onAnimationFinish={() => setShowConfetti(false)} />
     </div>
   );
 }
