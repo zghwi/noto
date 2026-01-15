@@ -119,15 +119,15 @@ export async function createXByFileId(
 ) {
   const file = await getFileById(fileId);
   const ai = new AI(file.data.data, file.data.contentType);
-  const questions = await ai.generate(x, q);
-  const p = JSON.parse(questions);
+  const data = await ai.generate(x, q);
+  const p = JSON.parse(data);
   if ("error" in p) return { error: true, type: p.error };
   const req = await authRequest(
     `/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`,
     "POST",
     x === "quiz"
-      ? JSON.stringify({ questions })
-      : JSON.stringify({ cards: questions }),
+      ? JSON.stringify({ questions: data })
+      : JSON.stringify({ cards: data }),
   );
   return req;
 }
@@ -140,6 +140,10 @@ export async function uploadFile(formData: FormData) {
 export async function deleteQuizByFileId(fileId: string) {
   const res = await authRequest(`/quizzes/${fileId}`, "DELETE");
   return res;
+}
+
+export async function deleteCardsByFileId(fileId: string) {
+  const res = await authRequest(`/cardspacks/${fileId}`, "DELETE");
 }
 
 export async function cardsPacks() {

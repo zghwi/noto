@@ -23,6 +23,7 @@ import {
   Minus,
 } from "lucide-react";
 import {
+  deleteCardsByFileId,
   deleteFileById,
   deleteQuizByFileId,
   getFilesDetails,
@@ -143,7 +144,7 @@ export default function Files() {
     try {
       setDeletingId(id);
       await deleteQuizByFileId(id);
-      // TODO: delete flashcards by ID
+      await deleteCardsByFileId(id);
       const d = await deleteFileById(id);
       toast.success(d.data.message);
 

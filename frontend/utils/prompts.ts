@@ -17,6 +17,8 @@ You must extract important knowledge points and transform them into testable que
 - Options should be plausible but only one correct.  
 - Return output strictly in JSON format:  
   Array<{ "question": string, "options": Array<string>, "answer_idx": number, "explanation": string }>
+- Output must be valid JSON that can be parsed by JavaScript JSON.parse().
+- Use ('') instead of ("") when quoting something not JSON-related.
 - 'answer_idx' must be the 0-based index of the correct option.  
 - 'explanation' should explain why the correct option is correct or clarify the concept being tested, not mention the file or source.  
 - The explanation must read like a teacher clarifying a concept to a student.  
@@ -46,6 +48,8 @@ You must identify key concepts, facts, definitions, and relationships, then expr
 * Keep both sides concise and focused on a single concept or fact.
 * Return output strictly in JSON format:
   Array<{ "front": string, "back": string }>
+* Output must be valid JSON that can be parsed by JavaScript JSON.parse().
+* Use ('') instead of ("") when quoting something not JSON-related.
 * The "back" should provide a complete, self-contained answer or clarification.
 * Use the same language used in the file/image.
 
