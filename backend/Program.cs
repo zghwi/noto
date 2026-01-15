@@ -195,7 +195,7 @@ app.MapDelete("/delete_account", async (AppDbContext db, HttpContext http) =>
     return Results.Ok(new { message = "Account deleted successfully" });
 });
 
-app.MapPost("/delete_data", async (HttpContext http, AppDbContext db) =>
+app.MapDelete("/delete_data", async (HttpContext http, AppDbContext db) =>
 {
     var username = http.User.Identity?.Name;
     if (username == null)
