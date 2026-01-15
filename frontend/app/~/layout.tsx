@@ -3,6 +3,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import { AppBottomBar } from "@/components/ui/app-bottom-bar";
+import { AuthLoadingScreen } from "@/components/AuthLoadingScreen";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -26,7 +27,7 @@ export default function RootLayout({
   }, []);
 
   if (!isClient || isMobile === undefined) {
-    return null;
+    return <AuthLoadingScreen />;
   }
 
   if (isMobile) {

@@ -4,8 +4,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { useEffect, useState } from "react";
-
 import { Analytics } from "@vercel/analytics/next";
+import { GlobalSplashScreen } from "@/components/GlobalSplashScreen";
 
 const inter = Inter({ subsets: ["latin"], weight: ["500"] });
 
@@ -15,6 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [theme, setTheme] = useState<string>("dark");
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     const handleThemeChange = () => {
@@ -43,15 +44,21 @@ export default function RootLayout({
     };
     mediaQuery.addEventListener("change", handleSystemChange);
 
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 1500);
+
     return () => {
       window.removeEventListener("themeChange", handleThemeChange);
       mediaQuery.removeEventListener("change", handleSystemChange);
+      clearTimeout(timer);
     };
   }, []);
 
   return (
     <html lang="en">
       <body className={`${theme === "dark" ? "dark" : ""} ${inter.className}`}>
+        {showSplash && <GlobalSplashScreen />}
         <main>{children}</main>
         <Analytics />
         <Toaster />

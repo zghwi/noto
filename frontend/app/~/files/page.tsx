@@ -385,7 +385,7 @@ export default function Files() {
         <div className="flex items-center justify-between">
           <Breadcrumb
             style={{ animation: "slideIn 0.5s ease-out" }}
-            className="sticky top-3 z-10 backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
+            className="backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
           >
             <BreadcrumbList>
               <BreadcrumbItem>
