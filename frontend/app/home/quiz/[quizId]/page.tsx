@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  getFileByIdDetails,
-  getQuizByFileId,
-  updateQuizScore,
-} from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,20 +12,14 @@ import {
   ArrowRight,
   ArrowLeft,
   Trophy,
-  Clock,
   Target,
   Home,
-  Slash,
+  RefreshCw,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { toast } from "sonner";
+import { getQuizByQuizId, getUserById } from "@/utils/api";
 
 type Question = {
   question: string;
@@ -39,43 +28,50 @@ type Question = {
   explanation: string;
 };
 
-export default function FileQuiz() {
+export default function PublicQuiz() {
   const [quiz, setQuiz] = useState<{
     id: string;
     userId: string;
-    fileId: string;
-    score: number;
     questions: string;
   } | null>();
-  const [fileDetails, setFileDetails] = useState<any>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
-  const { id } = useParams();
+  const [owner, setOwner] = useState<string>("");
+  const { quizId } = useParams();
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
-      const f = await getFileByIdDetails(id as string);
-      if (!f.error) setFileDetails(f.data);
-      const res = await getQuizByFileId(id as string);
-      if (!res.error) {
-        const q = JSON.parse(res.data.questions);
-        setQuiz(res.data);
-        setQuestions(q);
-        setSelectedAnswers(new Array(q.length).fill(-1));
-      } else {
-        if (res.type === "Not Found") {
+      try {
+        const res = await getQuizByQuizId(quizId as string);
+
+        if (!res.error) {
+          const q = JSON.parse(res.data.questions);
+          setQuiz(res.data);
+          setQuestions(q);
+          setSelectedAnswers(new Array(q.length).fill(-1));
+        } else {
           setQuiz(null);
           setQuestions([]);
         }
+
+        const ures = await getUserById(res.data.userId);
+        if (!ures.error) {
+          setOwner(ures.data.name);
+        } else {
+          setOwner("?");
+        }
+      } catch (error) {
+        console.error(error);
+        setQuiz(null);
       }
       setLoading(false);
     })();
-  }, []);
+  }, [quizId]);
 
   const handleSelectAnswer = (answerIndex: number) => {
     const newAnswers = [...selectedAnswers];
@@ -95,7 +91,7 @@ export default function FileQuiz() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     let correct = 0;
     questions.forEach((q, index) => {
       if (selectedAnswers[index] === q.answer_idx) {
@@ -105,8 +101,20 @@ export default function FileQuiz() {
     const finalScore = Math.round((correct / questions.length) * 100);
     setScore(finalScore);
     setShowResults(true);
+  };
 
-    await updateQuizScore(quiz!.id, finalScore);
+  const handleRetake = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswers(new Array(questions.length).fill(-1));
+    setShowResults(false);
+    setScore(0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    await navigator.clipboard.writeText(url);
+    toast.success("Quiz link copied to clipboard!");
   };
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -127,44 +135,13 @@ export default function FileQuiz() {
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
         <XCircle className="h-16 w-16 text-destructive" />
         <h2 className="text-2xl font-bold">Quiz not found</h2>
-        <Button onClick={() => router.push("/~/files")} variant="outline">
+        <p className="text-muted-foreground">
+          This quiz doesn't exist or has been removed.
+        </p>
+        <Button onClick={() => router.push("/")} variant="outline">
           <Home className="h-4 w-4 mr-2" />
-          Go to Files
+          Go Home
         </Button>
-      </div>
-    );
-  }
-
-  if (quiz.score !== -1) {
-    return (
-      <div className="max-w-2xl mx-auto py-12 space-y-6">
-        <Card className="p-8 text-center space-y-6">
-          <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-              <Trophy className="h-10 w-10 text-primary" />
-            </div>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Quiz Already Completed</h2>
-            <p className="text-muted-foreground mb-4">
-              You've already taken this quiz and scored
-            </p>
-            <div className="text-5xl font-bold text-primary mb-2">
-              {quiz.score}%
-            </div>
-          </div>
-          <div className="flex gap-3 justify-center">
-            <Button
-              onClick={() => router.push(`/~/files/${id}`)}
-              variant="outline"
-            >
-              Back to File
-            </Button>
-            <Button onClick={() => router.push("/~/files")}>
-              View All Files
-            </Button>
-          </div>
-        </Card>
       </div>
     );
   }
@@ -200,34 +177,6 @@ export default function FileQuiz() {
           }
         `}</style>
 
-        <Breadcrumb style={{ animation: "fadeInUp 0.5s ease-out" }}>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/~">~</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/~/files/${id}`}>
-                {fileDetails.name}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>Quiz</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
         <Card
           className="p-8 text-center space-y-6 relative overflow-hidden"
           style={{ animation: "scaleIn 0.5s ease-out" }}
@@ -241,7 +190,7 @@ export default function FileQuiz() {
               </div>
             </div>
 
-            <h2 className="text-3xl font-bold mb-2">Quiz Complete!</h2>
+            <h2 className="text-3xl font-bold mb-2">Practice Complete!</h2>
             <p className="text-muted-foreground mb-6">Here's how you did</p>
 
             <div
@@ -284,15 +233,23 @@ export default function FileQuiz() {
                   : "💪 Keep studying! You'll get better with practice!"}
             </p>
 
-            <div className="flex gap-3 justify-center">
-              <Button
-                onClick={() => router.push(`/~/files/${id}`)}
-                variant="outline"
-              >
-                Back to File
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm text-blue-600 dark:text-blue-400 mb-6">
+              <Brain className="h-4 w-4" />
+              This is a practice quiz - your score is not saved
+            </div>
+
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Button onClick={handleRetake} size="lg" variant="outline">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Retake Quiz
               </Button>
-              <Button onClick={() => router.push("/~/files")}>
-                View All Files
+              <Button onClick={handleShare} size="lg" variant="outline">
+                <Share2 className="h-4 w-4 mr-2" />
+                Share Quiz
+              </Button>
+              <Button onClick={() => router.push("/")} size="lg">
+                <Home className="h-4 w-4 mr-2" />
+                Go Home
               </Button>
             </div>
           </div>
@@ -396,72 +353,33 @@ export default function FileQuiz() {
         }
       `}</style>
 
-      <Breadcrumb
-        style={{ animation: "fadeInUp 0.5s ease-out" }}
-        className="backdrop-blur-md bg-background/80 border border-border/40 rounded-lg px-4 py-2.5 shadow-sm w-fit"
-      >
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              href="/~"
-              className="hover:text-primary transition-colors font-medium"
-            >
-              ~
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <Slash className="text-muted-foreground/50" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              href="/~/files"
-              className="hover:text-primary transition-colors font-medium"
-            >
-              Your Files
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <Slash className="text-muted-foreground/50" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              href={`/~/files/${id}`}
-              className="hover:text-primary transition-colors font-medium"
-            >
-              {fileDetails.name}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <Slash className="text-muted-foreground/50" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage className="text-foreground font-medium">
-              Quiz
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
       <div
         className="space-y-4"
         style={{ animation: "fadeInUp 0.5s ease-out" }}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
               <Brain className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Quiz Time!</h1>
+              <h1 className="text-2xl font-bold">{owner}'s Quiz</h1>
               <p className="text-sm text-muted-foreground">
                 Question {currentQuestion + 1} of {questions.length}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>Take your time</span>
+          <div className="flex items-center gap-2">
+            <Button onClick={handleShare} variant="outline" size="sm">
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
+            </Button>
           </div>
+        </div>
+
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-600 dark:text-blue-400">
+          <Brain className="h-3 w-3" />
+          Practice mode - your score won't be saved
         </div>
 
         <div className="space-y-2">

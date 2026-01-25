@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import * as z from "zod";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
@@ -50,7 +50,7 @@ export function NewFile() {
       setOpen(false);
       setFile(null);
       toast.success("File uploaded successfully");
-      router.push(`/~/files/${data.id}`);
+      router.push(`/home/files/${data.id}`);
     } else {
       console.log(res.data);
       toast.error("Failed to upload file");

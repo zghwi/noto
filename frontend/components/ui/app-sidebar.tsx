@@ -15,17 +15,17 @@ import { usePathname } from "next/navigation";
 const items = [
   {
     title: "Home",
-    url: "/~",
+    url: "/home",
     icon: Home,
   },
   {
     title: "Files",
-    url: "/~/files",
+    url: "/home/files",
     icon: Folder,
   },
   {
     title: "Settings",
-    url: "/~/settings",
+    url: "/home/settings",
     icon: Settings,
   },
 ];
@@ -34,7 +34,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const r = pathname.split("/");
   let ppath = "";
-  if (pathname == "/~") ppath = pathname;
+  if (pathname == "/home") ppath = pathname;
   else ppath = "/" + r[1] + "/" + r[2];
   return (
     <Sidebar variant="floating">

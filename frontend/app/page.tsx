@@ -14,7 +14,6 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isAuthorized } from "@/utils/api";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function NotoLanding() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,7 +24,7 @@ export default function NotoLanding() {
     (async () => {
       const ok = await isAuthorized();
       if (ok) {
-        redirect("/~");
+        redirect("/home");
       }
       setLoading(false);
     })();

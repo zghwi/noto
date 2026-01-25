@@ -1,9 +1,5 @@
-import {
-  createPartFromUri,
-  createUserContent,
-  GoogleGenAI,
-} from "@google/genai";
-import { FLASHCARDS_PROMPT, QUIZ_PROMPT } from "./prompts";
+import {createPartFromUri, createUserContent, GoogleGenAI,} from "@google/genai";
+import {FLASHCARDS_PROMPT, QUIZ_PROMPT} from "./prompts";
 
 export default class AI {
   ai: GoogleGenAI;
@@ -44,7 +40,6 @@ export default class AI {
       ],
     });
 
-    let raw = res.text?.replaceAll("```", "") as string;
-    return raw;
+    return res.text?.replaceAll("```", "") as string;
   }
 }

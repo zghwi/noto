@@ -3,7 +3,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import { GlobalSplashScreen } from "@/components/GlobalSplashScreen";
 

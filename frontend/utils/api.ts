@@ -48,19 +48,16 @@ async function authRequest(
   };
 }
 export async function getUser() {
-  const data = await authRequest("/profile");
-  return data;
+  return await authRequest("/profile");
 }
 
 export async function isAuthorized() {
   const res = await getUser();
-  if (res.error) return false;
-  return true;
+  return !res.error;
 }
 
 export async function getFiles() {
-  const data = await authRequest("/files");
-  return data;
+  return await authRequest("/files");
 }
 
 export async function getFilesDetails() {
@@ -78,8 +75,7 @@ export async function getFilesDetails() {
 }
 
 export async function getFileById(id: string) {
-  const data = await authRequest(`/files/${id}`);
-  return data;
+  return await authRequest(`/files/${id}`);
 }
 
 export async function getFileByIdDetails(id: string) {
@@ -93,23 +89,19 @@ export async function getFileByIdDetails(id: string) {
 }
 
 export async function deleteFileById(id: string) {
-  const req = await authRequest(`/files/${id}`, "DELETE");
-  return req;
+  return await authRequest(`/files/${id}`, "DELETE");
 }
 
 export async function getQuizByFileId(fileId: string) {
-  const data = await authRequest(`/quizzes/${fileId}`);
-  return data;
+  return await authRequest(`/quizzes/${fileId}`);
 }
 
 export async function getQuizByQuizId(quizId: string) {
-  const res = await authRequest(`/quiz/${quizId}`);
-  return res;
+  return await authRequest(`/quiz/${quizId}`);
 }
 
 export async function getFlashcardsByFileId(fileId: string) {
-  const data = await authRequest(`/cardspacks/${fileId}`);
-  return data;
+  return await authRequest(`/cardspacks/${fileId}`);
 }
 
 export async function createXByFileId(
@@ -122,33 +114,29 @@ export async function createXByFileId(
   const data = await ai.generate(x, q);
   const p = JSON.parse(data);
   if ("error" in p) return { error: true, type: p.error };
-  const req = await authRequest(
-    `/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`,
-    "POST",
-    x === "quiz"
-      ? JSON.stringify({ questions: data })
-      : JSON.stringify({ cards: data }),
+  return await authRequest(
+      `/${x === "quiz" ? "quizzes" : "cardspacks"}/${fileId}`,
+      "POST",
+      x === "quiz"
+          ? JSON.stringify({questions: data})
+          : JSON.stringify({cards: data}),
   );
-  return req;
 }
 
 export async function uploadFile(formData: FormData) {
-  const res = await authRequest("/upload", "POST", formData);
-  return res;
+  return await authRequest("/upload", "POST", formData);
 }
 
 export async function deleteQuizByFileId(fileId: string) {
-  const res = await authRequest(`/quizzes/${fileId}`, "DELETE");
-  return res;
+  return await authRequest(`/quizzes/${fileId}`, "DELETE");
 }
 
 export async function deleteCardsByFileId(fileId: string) {
-  const res = await authRequest(`/cardspacks/${fileId}`, "DELETE");
+  return await authRequest(`/cardspacks/${fileId}`, "DELETE");
 }
 
 export async function cardsPacks() {
-  const res = await authRequest("/user_cardspacks");
-  return res;
+  return await authRequest("/user_cardspacks");
 }
 
 export async function quizAverage() {
@@ -169,34 +157,29 @@ export async function quizAverage() {
 }
 
 export async function updateProfile(name: string) {
-  const res = await authRequest(
-    "/update_profile",
-    "POST",
-    JSON.stringify({ name }),
+  return await authRequest(
+      "/update_profile",
+      "POST",
+      JSON.stringify({name}),
   );
-  return res;
 }
 
 export async function getUserById(id: string) {
-  const res = await authRequest(`/get_user/${id}`);
-  return res;
+  return await authRequest(`/get_user/${id}`);
 }
 
 export async function updateQuizScore(quizId: string, score: number) {
-  const res = await authRequest(
-    `/update_quiz_score/${quizId}`,
-    "POST",
-    JSON.stringify({ score }),
+  return await authRequest(
+      `/update_quiz_score/${quizId}`,
+      "POST",
+      JSON.stringify({score}),
   );
-  return res;
 }
 
 export async function deleteAccountData() {
-  const res = await authRequest("/delete_data", "DELETE");
-  return res;
+  return await authRequest("/delete_data", "DELETE");
 }
 
 export async function deleteAccount() {
-  const res = await authRequest("/delete_account", "DELETE");
-  return res;
+  return await authRequest("/delete_account", "DELETE");
 }

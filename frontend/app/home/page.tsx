@@ -210,7 +210,7 @@ export default function Root() {
               className="rounded-full group cursor-pointer"
               asChild
             >
-              <Link href="/~/files">
+              <Link href="/home/files">
                 View Files
                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -268,7 +268,7 @@ export default function Root() {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">Recently Uploaded</h2>
           <Link
-            href="/~/files"
+            href="/home/files"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 group"
           >
             View all
@@ -281,7 +281,7 @@ export default function Root() {
             {files?.slice(0, 4).map((file, index) => (
               <Link
                 key={file.id ?? file.Id}
-                href={`/~/files/${file.id ?? file.Id}`}
+                href={`/home/files/${file.id ?? file.Id}`}
                 className="group relative p-4 border rounded-xl bg-card hover:shadow-md hover:border-primary/50 transition-all duration-300"
                 style={{
                   animation: `fadeInUp 0.5s ease-out ${index * 0.1 + 0.6}s both`,
@@ -317,7 +317,7 @@ export default function Root() {
               tools
             </p>
             <Button asChild className="rounded-full cursor-pointer">
-              <Link href="/~/files">
+              <Link href="/home/files">
                 <Plus className="h-4 w-4 mr-2" />
                 Upload First File
               </Link>

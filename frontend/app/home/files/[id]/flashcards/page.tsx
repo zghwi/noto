@@ -117,7 +117,7 @@ export default function FileFlashcards() {
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
         <XCircle className="h-16 w-16 text-destructive" />
         <h2 className="text-2xl font-bold">Flashcards not found</h2>
-        <Button onClick={() => router.push("/~/files")} variant="outline">
+        <Button onClick={() => router.push("/home/files")} variant="outline">
           <Home className="h-4 w-4 mr-2" />
           Go to Files
         </Button>
@@ -152,7 +152,7 @@ export default function FileFlashcards() {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink
-                href="/~"
+                href="/home"
                 className="hover:text-primary transition-colors font-medium"
               >
                 ~
@@ -163,7 +163,7 @@ export default function FileFlashcards() {
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink
-                href="/~/files"
+                href="/home/files"
                 className="hover:text-primary transition-colors font-medium"
               >
                 Your Files
@@ -174,7 +174,7 @@ export default function FileFlashcards() {
             </BreadcrumbSeparator>
             <BreadcrumbItem>
               <BreadcrumbLink
-                href={`/~/files/${id}`}
+                href={`/home/files/${id}`}
                 className="hover:text-primary transition-colors font-medium"
               >
                 {fileDetails.name}
@@ -263,13 +263,13 @@ export default function FileFlashcards() {
                 Study Again
               </Button>
               <Button
-                onClick={() => router.push(`/~/files/${id}`)}
+                onClick={() => router.push(`/home/files/${id}`)}
                 size="lg"
                 variant="outline"
               >
                 Back to File
               </Button>
-              <Button onClick={() => router.push("/~/files")} size="lg">
+              <Button onClick={() => router.push("/home/files")} size="lg">
                 View All Files
               </Button>
             </div>
@@ -334,19 +334,19 @@ export default function FileFlashcards() {
       <Breadcrumb style={{ animation: "fadeInUp 0.5s ease-out" }}>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/~">~</BreadcrumbLink>
+            <BreadcrumbLink href="/home">~</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
+            <BreadcrumbLink href="/home/files">Your Files</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/~/files/${id}`}>
+            <BreadcrumbLink href={`/home/files/${id}`}>
               {fileDetails.name}
             </BreadcrumbLink>
           </BreadcrumbItem>

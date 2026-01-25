@@ -31,7 +31,6 @@ import {
   Loader2,
   Copy,
   Check,
-  Slash,
   Trophy,
   Clock,
   Minus,
@@ -157,7 +156,7 @@ export default function FileById() {
   };
 
   const handleCopyQuizLink = async () => {
-    const link = `${window.location.origin}/~/quiz/${existingQuiz.id}`;
+    const link = `${window.location.origin}/home/quiz/${existingQuiz.id}`;
     await navigator.clipboard.writeText(link);
     setCopiedQuiz(true);
     toast.success("Quiz link copied to clipboard!");
@@ -165,7 +164,7 @@ export default function FileById() {
   };
 
   const handleCopyFlashcardsLink = async () => {
-    const link = `${window.location.origin}/~/flashcards/${existingFlashcards.id}`;
+    const link = `${window.location.origin}/home/flashcards/${existingFlashcards.id}`;
     await navigator.clipboard.writeText(link);
     setCopiedFlashcards(true);
     toast.success("Flashcards link copied to clipboard!");
@@ -256,7 +255,7 @@ export default function FileById() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              href="/~"
+              href="/home"
               className="hover:text-primary transition-colors font-medium"
             >
               ~
@@ -266,7 +265,7 @@ export default function FileById() {
             <SlashIcon className="text-muted-foreground/50" />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/~/files">Your Files</BreadcrumbLink>
+            <BreadcrumbLink href="/home/files">Your Files</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <SlashIcon className="text-muted-foreground/50" />
@@ -374,7 +373,7 @@ export default function FileById() {
 
                 <div className="flex flex-col gap-2 pt-2">
                   {existingQuiz.score === -1 && (
-                    <Link href={`/~/files/${id}/quiz`} className="w-full">
+                    <Link href={`/home/files/${id}/quiz`} className="w-full">
                       <Button className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow">
                         Start Quiz
                         <ArrowRight className="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
@@ -537,7 +536,7 @@ export default function FileById() {
                 </div>
 
                 <div className="flex flex-col gap-2 pt-2">
-                  <Link href={`/~/files/${id}/flashcards`} className="w-full">
+                  <Link href={`/home/files/${id}/flashcards`} className="w-full">
                     <Button className="w-full rounded-full group/btn shadow-md hover:shadow-lg transition-shadow">
                       Start Studying
                       <ArrowRight className="h-4 w-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />

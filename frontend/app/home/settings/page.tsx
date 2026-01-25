@@ -147,7 +147,7 @@ export default function Settings() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink
-              href="/~"
+              href="/home"
               className="hover:text-primary transition-colors font-medium"
             >
               ~

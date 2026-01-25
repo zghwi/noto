@@ -2,7 +2,7 @@
 
 import { redirect, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,7 +35,7 @@ export default function Signup() {
   useEffect(() => {
     (async () => {
       const ok = await isAuthorized();
-      if (ok) redirect("/~");
+      if (ok) redirect("/home");
     })();
   }, []);
 
@@ -81,9 +81,9 @@ export default function Signup() {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleSignup();
+      await handleSignup();
     }
   };
 

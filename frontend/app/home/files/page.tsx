@@ -1,43 +1,14 @@
 "use client";
 
-import { NewFile } from "@/components/ui/newfile";
-import { Spinner } from "@/components/ui/spinner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  File,
-  FileQuestion,
-  SlashIcon,
-  Trash,
-  Search,
-  LayoutGrid,
-  List,
-  Trophy,
-  Clock,
-  Minus,
-} from "lucide-react";
-import {
-  deleteCardsByFileId,
-  deleteFileById,
-  deleteQuizByFileId,
-  getFilesDetails,
-  getQuizByFileId,
-} from "@/utils/api";
-import { useEffect, useState } from "react";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import {NewFile} from "@/components/ui/newfile";
+import {Spinner} from "@/components/ui/spinner";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
+import {Clock, File, FileQuestion, LayoutGrid, List, Minus, Search, SlashIcon, Trash, Trophy,} from "lucide-react";
+import {deleteCardsByFileId, deleteFileById, deleteQuizByFileId, getFilesDetails, getQuizByFileId,} from "@/utils/api";
+import {useEffect, useState} from "react";
+import {Empty, EmptyHeader, EmptyMedia, EmptyTitle,} from "@/components/ui/empty";
+import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -55,8 +26,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
+import {useRouter} from "next/navigation";
+import {Input} from "@/components/ui/input";
 
 type Mixed = {
   id?: string;
@@ -129,15 +100,13 @@ export default function Files() {
 
   const dateToString = (d: string) => {
     const date = new Date(d);
-    const fmt = new Intl.DateTimeFormat("en-US", {
+    return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
     }).format(date);
-
-    return fmt;
   };
 
   const handleDelete = async (id: string) => {
@@ -249,7 +218,7 @@ export default function Files() {
         </TableCell>
         <TableCell className="font-medium">
           <Link
-            href={`/~/files/${file.id ?? file.Id}`}
+            href={`/home/files/${file.id ?? file.Id}`}
             className="hover:text-primary transition-colors hover:underline flex items-center gap-2"
           >
             {file.name ?? file.Name}
@@ -290,7 +259,7 @@ export default function Files() {
           <DeleteDialog file={file} />
         </div>
 
-        <Link href={`/~/files/${file.id ?? file.Id}`} className="block">
+        <Link href={`/home/files/${file.id ?? file.Id}`} className="block">
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 group-hover:bg-primary/20 group-hover:scale-110 transition-all">
               <File className="h-8 w-8 text-primary" />
@@ -335,7 +304,7 @@ export default function Files() {
           </div>
           <div className="flex-1 min-w-0 overflow-hidden">
             <Link
-              href={`/~/files/${file.id ?? file.Id}`}
+              href={`/home/files/${file.id ?? file.Id}`}
               className="block overflow-hidden"
             >
               <p className="font-semibold hover:text-primary transition-colors hover:underline truncate overflow-hidden text-ellipsis whitespace-nowrap">
@@ -391,7 +360,7 @@ export default function Files() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink
-                  href="/~"
+                  href="/home"
                   className="hover:text-primary transition-colors font-medium"
                 >
                   ~

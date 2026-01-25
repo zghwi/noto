@@ -2,7 +2,7 @@
 
 import { redirect, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +27,7 @@ export default function SigninPage() {
   useEffect(() => {
     (async () => {
       const ok = await isAuthorized();
-      if (ok) redirect("/~");
+      if (ok) redirect("/home");
     })();
   }, []);
 
@@ -45,7 +45,7 @@ export default function SigninPage() {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
-        router.push("/~");
+        router.push("/home");
         toast.success(`Welcome back, ${data.name}!`);
       } else {
         toast.error("Invalid credentials");
@@ -57,9 +57,9 @@ export default function SigninPage() {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleLogin();
+      await handleLogin();
     }
   };
 
