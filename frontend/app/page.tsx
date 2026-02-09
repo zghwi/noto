@@ -183,37 +183,210 @@ export default function NotoLanding() {
               </button>
             </div>
           </div>
-
-          {/** TODO: add screenshots and demos to the hero section  */}
           <div className="mt-16 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 dark:from-purple-600/20 dark:to-pink-600/20 blur-3xl"></div>
-            <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-200 dark:border-gray-700">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 p-6 rounded-xl">
-                  <div
-                    className="w-12 h-12 rounded-lg mb-4"
-                    style={{ backgroundColor: "oklch(0.606 0.25 292.717)" }}
-                  ></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+            <div className="hidden md:block space-y-8">
+              <div className="relative">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                  <div className="flex items-center gap-2 mb-4 px-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div className="flex-1 text-center">
+                      <div className="inline-block px-4 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs text-gray-600 dark:text-gray-400">
+                        /home
+                      </div>
+                    </div>
+                  </div>
+                  <img
+                    src="/showcases/desktop/noto_home(Desktop).png"
+                    alt="Noto Home Dashboard"
+                    className="w-full rounded-lg shadow-lg"
+                  />
                 </div>
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 p-6 rounded-xl">
-                  <div
-                    className="w-12 h-12 rounded-lg mb-4"
-                    style={{ backgroundColor: "oklch(0.606 0.25 292.717)" }}
-                  ></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 p-6 rounded-xl">
-                  <div
-                    className="w-12 h-12 rounded-lg mb-4"
-                    style={{ backgroundColor: "oklch(0.606 0.25 292.717)" }}
-                  ></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-lg border border-gray-200 dark:border-gray-700">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    📊 Track Your Learning Progress
+                  </p>
                 </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-6 pt-8">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
+                  <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="flex items-center gap-2 mb-4 px-2">
+                      <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      </div>
+                      <div className="flex-1 text-center">
+                        <div className="inline-block px-4 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs text-gray-600 dark:text-gray-400">
+                          /home/files
+                        </div>
+                      </div>
+                    </div>
+                    <img
+                      src="/showcases/desktop/noto_file(Desktop).png"
+                      alt="Noto File Management"
+                      className="w-full rounded-lg shadow-lg"
+                    />
+                  </div>
+                  <div className="mt-4 text-center">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      ✨ Generate Quizzes & Flashcards
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
+                  <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="flex items-center gap-2 mb-4 px-2">
+                      <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      </div>
+                      <div className="flex-1 text-center">
+                        <div className="inline-block px-4 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs text-gray-600 dark:text-gray-400">
+                          /home/quiz
+                        </div>
+                      </div>
+                    </div>
+                    <img
+                      src="/showcases/desktop/noto_quiz(Desktop).png"
+                      alt="Noto Interactive Quiz"
+                      className="w-full rounded-lg shadow-lg"
+                    />
+                  </div>
+                  <div className="mt-4 text-center">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                      🧠 Interactive Quizzes
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="md:hidden">
+              <style jsx>{`
+                .carousel-container {
+                  overflow-x: auto;
+                  scroll-snap-type: x mandatory;
+                  -webkit-overflow-scrolling: touch;
+                  scrollbar-width: none;
+                  -ms-overflow-style: none;
+                }
+                .carousel-container::-webkit-scrollbar {
+                  display: none;
+                }
+                .carousel-item {
+                  scroll-snap-align: center;
+                  scroll-snap-stop: always;
+                }
+              `}</style>
+
+              <div className="carousel-container flex gap-4 px-4 pb-8">
+                <div className="carousel-item min-w-full flex-shrink-0">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all"></div>
+                    <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+                      <div className="flex flex-col items-center">
+                        <div className="w-full max-w-[280px] mx-auto">
+                          <div className="relative">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-gray-900 dark:bg-gray-100 rounded-b-2xl z-10"></div>
+                            <div className="bg-gray-900 dark:bg-gray-100 rounded-[2.5rem] p-2">
+                              <img
+                                src="/showcases/phone/noto_home(iPhone 12 Pro).png"
+                                alt="Noto Home Dashboard"
+                                className="w-full rounded-[2rem] shadow-lg"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-6 text-center">
+                          <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">
+                            📊 Dashboard Overview
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Track your progress and stats
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="carousel-item min-w-full flex-shrink-0">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all"></div>
+                    <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+                      <div className="flex flex-col items-center">
+                        <div className="w-full max-w-[280px] mx-auto">
+                          <div className="relative">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-gray-900 dark:bg-gray-100 rounded-b-2xl z-10"></div>
+                            <div className="bg-gray-900 dark:bg-gray-100 rounded-[2.5rem] p-2">
+                              <img
+                                src="/showcases/phone/noto_file(iPhone 12 Pro).png"
+                                alt="Noto File Management"
+                                className="w-full rounded-[2rem] shadow-lg"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-6 text-center">
+                          <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">
+                            ✨ Instant Generation
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Generate Quizzes & Flashcards
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quiz Interface */}
+                <div className="carousel-item min-w-full flex-shrink-0">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all"></div>
+                    <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700">
+                      <div className="flex flex-col items-center">
+                        <div className="w-full max-w-[280px] mx-auto">
+                          <div className="relative">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-gray-900 dark:bg-gray-100 rounded-b-2xl z-10"></div>
+                            <div className="bg-gray-900 dark:bg-gray-100 rounded-[2.5rem] p-2">
+                              <img
+                                src="/showcases/phone/noto_quiz(iPhone 12 Pro).png"
+                                alt="Noto Interactive Quiz"
+                                className="w-full rounded-[2rem] shadow-lg"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-6 text-center">
+                          <h3 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">
+                            🧠 Interactive Quizzes
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Test your knowledge on the go
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Swipe Hint */}
+              <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+                ← Swipe to explore →
+              </p>
             </div>
           </div>
         </div>
